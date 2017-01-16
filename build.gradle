@@ -1,0 +1,23 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    maven { url "https://repo.grails.org/grails/core" }
+  }
+  dependencies {
+    classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+  }
+}
+
+wrapper {
+  gradleVersion = "$gradleWrapperVersion"
+}
+
+version "0.1.0"
+group "co.firefire.n12m"
+
+apply plugin: "idea"
+
+repositories {
+  mavenLocal()
+  maven { url "https://repo.grails.org/grails/core" }
+}
