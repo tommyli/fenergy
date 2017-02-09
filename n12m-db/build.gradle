@@ -1,3 +1,7 @@
+// Tommy Li (tommy.li@firefire.co), 2017-01-16
+
+import co.firefire.n12m.db.RunSqlScriptTask
+
 buildscript {
   repositories {
     mavenLocal()
@@ -5,7 +9,7 @@ buildscript {
   }
   dependencies {
     classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-//    classpath "org.flywaydb:flyway-parent:4.0.3"
+    classpath gradleApi()
   }
 }
 
@@ -37,32 +41,30 @@ dependencies {
   compile "org.grails:grails-core"
   console "org.grails:grails-console"
   profile "org.grails.profiles:base"
+
+  compile "mysql:mysql-connector-java:5.1.40"
 }
 
+println project.property('n12m.db.userid')
+
 flyway {
-  driver = 'org.hsqldb.jdbcDriver'
-  url = 'jdbc:hsqldb:file:/db/flyway_sample;shutdown=true'
-  user = 'SA'
-  password = 'mySecretPwd'
-  schemas = ['schema1', 'schema2', 'schema3']
-  table = 'schema_history'
-  locations = ['classpath:migrations1', 'migrations2', 'filesystem:/sql-migrations']
-  sqlMigrationPrefix = 'Migration-'
-  repeatableSqlMigrationPrefix = 'RRR'
-  sqlMigrationSeparator = '__'
-  sqlMigrationSuffix = '-OK.sql'
-  encoding = 'ISO-8859-1'
+  driver = project.property('n12m.db.driver')
+  url = project.property('n12m.db.url')
+  user = project.property('n12m.db.userid')
+  password = project.property('n12m.db.password')
+  schemas = ['n12mci']
+  locations = ["filesystem:${project.projectDir}/src/main/sql/migrations/"]
   placeholderReplacement = true
-  placeholders = [
-    'aplaceholder'    : 'value',
-    'otherplaceholder': 'value123'
-  ]
-  placeholderPrefix = '#['
-  placeholderSuffix = ']'
-  resolvers = ['com.mycompany.proj.CustomResolver', 'com.mycompany.proj.AnotherResolver']
+  placeholders = [:]
   skipDefaultResolvers = false
-  callbacks = ['com.mycompany.proj.CustomCallback', 'com.mycompany.proj.AnotherCallback']
   skipDefaultCallbacks = false
-  target = '1.1'
   outOfOrder = false
+}
+
+task setupCiTestData(type: RunSqlScriptTask) {
+  userid = project.property('n12m.db.userid')
+  password = project.property('n12m.db.password')
+  scripts = [
+    'insert_test_data.sql'
+  ]
 }
