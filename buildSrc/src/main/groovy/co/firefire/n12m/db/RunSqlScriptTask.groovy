@@ -8,7 +8,7 @@ import org.gradle.api.tasks.TaskAction
 class RunSqlScriptTask extends DefaultTask {
 
   String driver = project.property('n12m.db.driver')
-  String url = project.property('n12m.db.url')
+  String url
   String userid
   String password
   List<String> scripts = []
@@ -24,7 +24,7 @@ class RunSqlScriptTask extends DefaultTask {
         delimiter: ";"
       ) {
         classpath(path: project.configurations.runtime.asPath)
-        fileset(dir: "src/main/sql/ci-test-data", includes: script)
+        fileset(dir: "src/main/sql/test-data", includes: script)
       }
     }
   }

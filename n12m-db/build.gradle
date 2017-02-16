@@ -10,11 +10,12 @@ buildscript {
   dependencies {
     classpath "org.grails:grails-gradle-plugin:$grailsVersion"
     classpath gradleApi()
+    classpath "mysql:mysql-connector-java:5.1.40"
   }
 }
 
 plugins {
-  id "org.flywaydb.flyway" version "4.0.3"
+  id "org.flywaydb.flyway" version "4.1.0"
 }
 
 version "0.1.0"
@@ -45,14 +46,12 @@ dependencies {
   compile "mysql:mysql-connector-java:5.1.40"
 }
 
-println project.property('n12m.db.userid')
-
 flyway {
   driver = project.property('n12m.db.driver')
-  url = project.property('n12m.db.url')
-  user = project.property('n12m.db.userid')
-  password = project.property('n12m.db.password')
-  schemas = ['n12mci']
+  url = project.property('n12m.ci.db.url')
+  user = project.property('n12m.ci.db.userid')
+  password = project.property('n12m.ci.db.password')
+  schemas = [project.property('n12m.ci.db.schema')]
   locations = ["filesystem:${project.projectDir}/src/main/sql/migrations/"]
   placeholderReplacement = true
   placeholders = [:]
@@ -61,10 +60,18 @@ flyway {
   outOfOrder = false
 }
 
-task setupCiTestData(type: RunSqlScriptTask) {
-  userid = project.property('n12m.db.userid')
-  password = project.property('n12m.db.password')
+task setupTestData(type: RunSqlScriptTask) {
+  url = project.property('n12m.ci.db.url')
+  userid = project.property('n12m.ci.db.userid')
+  password = project.property('n12m.ci.db.password')
   scripts = [
     'insert_test_data.sql'
   ]
+}
+
+task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+  url = project.property('n12m.prod.db.url')
+  user = project.property('n12m.prod.db.userid')
+  password = project.property('n12m.prod.db.password')
+  schemas = [project.property('n12m.prod.db.schema')]
 }
