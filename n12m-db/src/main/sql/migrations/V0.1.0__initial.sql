@@ -11,6 +11,7 @@ CREATE TABLE nmi_meter_register (
   uom                      VARCHAR(5)  NOT NULL,
   interval_length          INT(3)      NOT NULL,
   next_scheduled_read_date DATE,
+  version                  INT DEFAULT 0 NOT NULL,
   CONSTRAINT nmi_meter_register_pk PRIMARY KEY (id),
   CONSTRAINT nmi_meter_register_uk UNIQUE (nmi, meter_serial, register_id, nmi_suffix)
 );
@@ -25,6 +26,7 @@ CREATE TABLE interval_day (
   reason_description   VARCHAR(240),
   update_date_time     DATETIME,
   msats_load_date_time DATETIME,
+  version              INT DEFAULT 0 NOT NULL,
   CONSTRAINT interval_day_pk PRIMARY KEY (id),
   CONSTRAINT interval_day_uk UNIQUE (nmi_meter_register, interval_date)
 );
@@ -38,6 +40,7 @@ CREATE TABLE interval_event (
   quality_method     VARCHAR(3) NOT NULL,
   reason_code        VARCHAR(3),
   reason_description VARCHAR(240),
+  version            INT DEFAULT 0 NOT NULL,
   CONSTRAINT interval_event_pk PRIMARY KEY (id),
   CONSTRAINT interval_event_uk UNIQUE (interval_day, start_interval)
 );

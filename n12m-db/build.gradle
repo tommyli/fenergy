@@ -60,6 +60,13 @@ flyway {
   outOfOrder = false
 }
 
+task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+  url = project.property('n12m.prod.db.url')
+  user = project.property('n12m.prod.db.userid')
+  password = project.property('n12m.prod.db.password')
+  schemas = [project.property('n12m.prod.db.schema')]
+}
+
 task setupTestData(type: RunSqlScriptTask) {
   url = project.property('n12m.ci.db.url')
   userid = project.property('n12m.ci.db.userid')
@@ -67,11 +74,4 @@ task setupTestData(type: RunSqlScriptTask) {
   scripts = [
     'insert_test_data.sql'
   ]
-}
-
-task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-  url = project.property('n12m.prod.db.url')
-  user = project.property('n12m.prod.db.userid')
-  password = project.property('n12m.prod.db.password')
-  schemas = [project.property('n12m.prod.db.schema')]
 }
