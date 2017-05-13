@@ -10,7 +10,7 @@ buildscript {
   dependencies {
     classpath "org.grails:grails-gradle-plugin:$grailsVersion"
     classpath gradleApi()
-    classpath "mysql:mysql-connector-java:5.1.40"
+    classpath "org.postgresql:postgresql:42.1.1.jre7"
   }
 }
 
@@ -43,7 +43,7 @@ dependencies {
   console "org.grails:grails-console"
   profile "org.grails.profiles:base"
 
-  compile "mysql:mysql-connector-java:5.1.40"
+  compile "org.postgresql:postgresql:42.1.1.jre7"
 }
 
 flyway {
@@ -54,7 +54,10 @@ flyway {
   schemas = [project.property('n12m.ci.db.schema')]
   locations = ["filesystem:${project.projectDir}/src/main/sql/migrations/"]
   placeholderReplacement = true
-  placeholders = [:]
+  placeholders = [
+    'schemaName': project.property('n12m.ci.db.schema'),
+    'dbUser': project.property('n12m.ci.db.userid')
+  ]
   skipDefaultResolvers = false
   skipDefaultCallbacks = false
   outOfOrder = false
@@ -65,6 +68,10 @@ task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
   user = project.property('n12m.prod.db.userid')
   password = project.property('n12m.prod.db.password')
   schemas = [project.property('n12m.prod.db.schema')]
+  placeholders = [
+    'schemaName': project.property('n12m.prod.db.schema'),
+    'dbUser': project.property('n12m.prod.db.userid')
+  ]
 }
 
 task setupTestData(type: RunSqlScriptTask) {

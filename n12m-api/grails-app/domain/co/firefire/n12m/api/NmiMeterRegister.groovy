@@ -6,16 +6,6 @@ import java.time.LocalDate
 
 class NmiMeterRegister implements Serializable {
 
-  static constraints = {
-//    nmi unique: ['meterSerial', 'registerId', 'nmiSuffix']
-    nmiConfig nullable: true
-    mdmDataStreamId nullable: true
-  }
-
-  static mapping = {
-    id generator: 'increment'
-  }
-
   String nmi
   String meterSerial
   String registerId
@@ -25,5 +15,19 @@ class NmiMeterRegister implements Serializable {
   UnitOfMeasure uom
   IntervalLength intervalLength
   LocalDate nextScheduledReadDate
-  
+  SortedSet<IntervalDay> intervalDays = new TreeSet<>()
+
+  static constraints = {
+    nmi(unique: ['meterSerial', 'registerId', 'nmiSuffix'])
+    nmiConfig nullable: true
+    mdmDataStreamId nullable: true
+  }
+
+  static mapping = {
+    id generator: 'increment'
+    intervalDays cascade: 'all-delete-orphan', fetch: 'join'
+  }
+
+  static hasMany = [intervalDays: IntervalDay]
+
 }

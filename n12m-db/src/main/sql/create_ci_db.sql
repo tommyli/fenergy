@@ -1,8 +1,0 @@
--- Tommy Li (tommy.li@firefire.co), 2017-02-09
-
--- Manually run
-CREATE DATABASE n12mci;
-
-CREATE USER 'n12mci' IDENTIFIED BY 'n12mci_password';
-
-GRANT SELECT, INSERT, DELETE, UPDATE, INDEX, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, EXECUTE ON n12mci.* TO 'n12mci';
