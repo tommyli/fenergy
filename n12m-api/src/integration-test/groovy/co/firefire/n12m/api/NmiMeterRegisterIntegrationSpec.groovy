@@ -4,18 +4,16 @@ package co.firefire.n12m.api
 
 import grails.test.mixin.integration.Integration
 import grails.transaction.Rollback
-import grails.transaction.Transactional
 import spock.lang.Specification
 
 import static co.firefire.n12m.api.TestUtils.dt
 
 @Integration
-@Transactional
+@Rollback
 class NmiMeterRegisterIntegrationSpec extends Specification {
 
   NmiMeterRegister underTest
 
-  @Rollback
   def 'New NmiMeterRegister saves and updates correctly'() {
     given:
     underTest = new NmiMeterRegister(nmi: '6123456789', meterSerial: '123456', registerId: 'E1', nmiSuffix: 'E1', uom: UnitOfMeasure.KWH, intervalLength: IntervalLength.IL_30, nextScheduledReadDate: dt('2017-02-23'))

@@ -39,13 +39,13 @@ class IntervalDay {
   }
 
   static mapping = {
-    id generator: 'increment'
-    retailPlan column: 'retail_plan'
+    id generator: 'sequence', params: ['sequence': 'interval_day_id_seq']
+    nmiMeterRegister column: 'nmi_meter_register'
   }
 
   static belongsTo = [nmiMeterRegister: NmiMeterRegister]
 
-  Map<Integer, BigDecimal> getVolumes() {
+  Map<Integer, BigDecimal> getIntervalVolumes() {
     int i = 1
     values.split(/,/).collectEntries { def value ->
       [(i++): value.toBigDecimal()]

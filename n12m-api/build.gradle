@@ -62,13 +62,16 @@ dependencies {
   testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
   testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
-  compile "mysql:mysql-connector-java:5.1.40"
+  compile "org.postgresql:postgresql:42.1.1.jre7"
 }
 
-def sysProps = project.properties.findAll { it.key.startsWith('n12m') }.inject([:]) { result, prop ->
-  result.put(prop.key, prop.value)
-  return result
-}
+def sysProps = [
+  'n12m.db.driver'  : project.property('n12m.db.driver'),
+  'n12m.db.schema'  : project.property('n12m.db.schema'),
+  'n12m.db.url'     : project.property('n12m.db.url'),
+  'n12m.db.userid'  : project.property('n12m.db.userid'),
+  'n12m.db.password': project.property('n12m.db.password')
+]
 
 bootRun {
   jvmArgs = ['-Dspring.output.ansi.enabled=always']

@@ -6,9 +6,9 @@
 
 GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
 ON ALL TABLES IN SCHEMA ${schemaName}
-TO ${dbUser};
+TO ${dbUserId};
 
-ALTER USER ${dbUser} SET search_path TO ${schemaName};
+ALTER USER ${dbUserId} SET search_path TO ${schemaName};
 
 CREATE TABLE IF NOT EXISTS nmi_meter_register (
   id                       SERIAL        NOT NULL,

@@ -70,9 +70,9 @@ dataSource:
     pooled: true
     jmxExport: true
     driverClassName: ${n12m.db.driver}
-    url: ${n12m.ci.db.url}
-    username: ${n12m.ci.db.userid}
-    password: ${n12m.ci.db.password}
+    url: ${n12m.db.url}
+    username: ${n12m.db.userid}
+    password: ${n12m.db.password}
     properties:
         jmxEnabled: true
         initialSize: 5

@@ -24,7 +24,7 @@ class NmiMeterRegister implements Serializable {
   }
 
   static mapping = {
-    id generator: 'increment'
+    id generator: 'sequence', params: ['sequence': 'nmi_meter_register_id_seq']
     intervalDays cascade: 'all-delete-orphan', fetch: 'join'
   }
 

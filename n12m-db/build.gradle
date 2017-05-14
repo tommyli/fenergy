@@ -48,15 +48,15 @@ dependencies {
 
 flyway {
   driver = project.property('n12m.db.driver')
+  schemas = [project.property('n12m.db.schema')]
   url = project.property('n12m.ci.db.url')
   user = project.property('n12m.ci.db.userid')
   password = project.property('n12m.ci.db.password')
-  schemas = [project.property('n12m.ci.db.schema')]
   locations = ["filesystem:${project.projectDir}/src/main/sql/migrations/"]
   placeholderReplacement = true
   placeholders = [
-    'schemaName': project.property('n12m.ci.db.schema'),
-    'dbUser': project.property('n12m.ci.db.userid')
+    'schemaName': project.property('n12m.db.schema'),
+    'dbUserId': project.property('n12m.ci.db.userid')
   ]
   skipDefaultResolvers = false
   skipDefaultCallbacks = false
@@ -64,13 +64,13 @@ flyway {
 }
 
 task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+  schemas = [project.property('n12m.db.schema')]
   url = project.property('n12m.prod.db.url')
   user = project.property('n12m.prod.db.userid')
   password = project.property('n12m.prod.db.password')
-  schemas = [project.property('n12m.prod.db.schema')]
   placeholders = [
-    'schemaName': project.property('n12m.prod.db.schema'),
-    'dbUser': project.property('n12m.prod.db.userid')
+    'schemaName': project.property('n12m.db.schema'),
+    'dbUserId': project.property('n12m.prod.db.userid')
   ]
 }
 
