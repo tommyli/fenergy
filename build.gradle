@@ -1,10 +1,13 @@
 buildscript {
+  ext {
+    springBootVersion = '1.5.3.RELEASE'
+  }
   repositories {
     mavenLocal()
-    maven { url "https://repo.grails.org/grails/core" }
+    mavenCentral()
   }
   dependencies {
-    classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
   }
 }
 
@@ -12,12 +15,14 @@ wrapper {
   gradleVersion = "$gradleWrapperVersion"
 }
 
+subprojects {
+  apply plugin: 'groovy'
+}
+
 version "0.1.0"
 group "co.firefire.n12m"
 
-apply plugin: "idea"
-
 repositories {
   mavenLocal()
-  maven { url "https://repo.grails.org/grails/core" }
+  mavenCentral()
 }

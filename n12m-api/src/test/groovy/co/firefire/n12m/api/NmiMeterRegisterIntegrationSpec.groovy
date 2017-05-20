@@ -2,14 +2,10 @@
 
 package co.firefire.n12m.api
 
-import grails.test.mixin.integration.Integration
-import grails.transaction.Rollback
 import spock.lang.Specification
 
 import static co.firefire.n12m.api.TestUtils.dt
 
-@Integration
-@Rollback
 class NmiMeterRegisterIntegrationSpec extends Specification {
 
   NmiMeterRegister underTest

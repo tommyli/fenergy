@@ -1,1 +1,3 @@
+rootProject.name = 'nem12-manager'
+
 include 'n12m-api', 'n12m-db'

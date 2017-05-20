@@ -1,11 +1,13 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### OS ###
 Thumbs.db
 .DS_Store
-.gradle
-build/
+
+### IntelliJ IDEA ###
 .idea
+*.iws
 *.iml
 *.ipr
-*.iws
-.project
-.settings
-.classpath

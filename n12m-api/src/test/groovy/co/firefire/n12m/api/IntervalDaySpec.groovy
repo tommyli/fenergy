@@ -2,13 +2,11 @@
 
 package co.firefire.n12m.api
 
-import grails.test.mixin.TestFor
 import org.springframework.validation.Errors
 import spock.lang.Specification
 
 import static co.firefire.n12m.api.TestUtils.dt
 
-@TestFor(IntervalDay)
 class IntervalDaySpec extends Specification {
 
   NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(intervalLength: IntervalLength.IL_30)

@@ -1,7 +1,5 @@
 import java.nio.charset.Charset
 
-import grails.util.BuildSettings
-import grails.util.Environment
 import org.springframework.boot.logging.logback.ColorConverter
 import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
 
