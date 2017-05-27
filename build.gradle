@@ -1,13 +1,15 @@
 buildscript {
   ext {
+    groovyVersion = '2.4.8'
     springBootVersion = '1.5.3.RELEASE'
   }
   repositories {
     mavenLocal()
+    jcenter()
     mavenCentral()
   }
   dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
   }
 }
 
@@ -15,14 +17,11 @@ wrapper {
   gradleVersion = "$gradleWrapperVersion"
 }
 
-subprojects {
-  apply plugin: 'groovy'
-}
-
 version "0.1.0"
 group "co.firefire.n12m"
 
 repositories {
   mavenLocal()
+  jcenter()
   mavenCentral()
 }

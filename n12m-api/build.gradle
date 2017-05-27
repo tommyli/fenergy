@@ -1,18 +1,31 @@
 // Tommy Li (tommy.li@firefire.co), 2017-01-16
 
 buildscript {
+  ext {
+    kotlinVersion = '1.1.2-2'
+  }
   repositories {
     mavenLocal()
+    jcenter()
     mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
   }
 }
 
 group "co.firefire.n12m.api"
 
 ext {
+  hibernateVersion = '5.1.2.Final'
+  logbackVersion = '1.2.2'
+  slf4jVersion = '1.7.25'
+  spockVersion = '1.1-groovy-2.4'
   springBootVersion = '1.5.2.RELEASE'
 }
 
+apply plugin: 'kotlin'
+apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 
 repositories {
@@ -26,20 +39,30 @@ dependencies {
   compile("org.springframework.boot:spring-boot-starter-logging")
   compile("org.springframework.boot:spring-boot-starter-mail")
   compile("org.springframework.boot:spring-boot-starter-web")
-  compile("org.codehaus.groovy:groovy")
+  compile("org.codehaus.groovy:groovy:$groovyVersion")
+  compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
   compile("org.springframework.boot:spring-boot-autoconfigure")
   compile("org.springframework.boot:spring-boot-starter-actuator")
   compile("org.springframework.boot:spring-boot-starter-tomcat")
-  compile("org.hibernate:hibernate-core:5.1.2.Final")
-  compile("org.hibernate:hibernate-ehcache:5.1.2.Final")
-  compile("org.hibernate:hibernate-java8:5.1.2.Final")
+  compile("org.hibernate:hibernate-core:${hibernateVersion}")
+  compile("org.hibernate:hibernate-ehcache:${hibernateVersion}")
+  compile("org.hibernate:hibernate-java8:${hibernateVersion}")
   compile("org.springframework.boot:spring-boot-starter-groovy-templates")
+  compile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+  compile("ch.qos.logback:logback-classic:$logbackVersion")
+
   runtime("com.h2database:h2")
   runtime("org.postgresql:postgresql:42.1.1.jre7")
-  testCompile("org.springframework.boot:spring-boot-starter-test")
+
+  testCompile("org.springframework.boot:spring-boot-test")
+  testCompile("org.springframework:spring-test")
+  testCompile("org.spockframework:spock-core:${spockVersion}")
+  testCompile("org.spockframework:spock-spring:${spockVersion}")
 }
 
 def sysProps = [
+  'logging.file'    : project.property('n12m.logging.file'),
+  'logging.path'    : project.property('n12m.logging.path'),
   'n12m.db.driver'  : project.property('n12m.db.driver'),
   'n12m.db.schema'  : project.property('n12m.db.schema'),
   'n12m.db.url'     : project.property('n12m.db.url'),

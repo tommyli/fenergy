@@ -2,7 +2,11 @@
 
 package co.firefire.n12m.api
 
-enum QualityMethod {
-  A,
-  E
+enum class QualityMethod {
+    A,
+    E,
+    F,
+    N,
+    S,
+    V
 }
