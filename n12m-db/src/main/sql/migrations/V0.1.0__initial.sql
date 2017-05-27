@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS interval_day (
   id                   SERIAL        NOT NULL,
   nmi_meter_register   INTEGER       NOT NULL REFERENCES nmi_meter_register (id),
   interval_date        DATE          NOT NULL,
-  quality_method       VARCHAR(1)    NOT NULL,
-  quality_method_flag  VARCHAR(2),
+  quality              VARCHAR(1)    NOT NULL,
+  method               VARCHAR(2),
   reason_code          VARCHAR(3),
   reason_description   VARCHAR(240),
   update_date_time     TIMESTAMP,
@@ -45,15 +45,15 @@ CREATE TABLE IF NOT EXISTS interval_day (
 ALTER SEQUENCE interval_day_id_seq RESTART WITH 1000 INCREMENT BY 50;
 
 CREATE TABLE IF NOT EXISTS interval_event (
-  id                  SERIAL            NOT NULL,
-  interval_day        INTEGER           NOT NULL REFERENCES interval_day (id),
-  start_interval      INTEGER           NOT NULL,
-  end_interval        INTEGER           NOT NULL,
-  quality_method      VARCHAR(1)        NOT NULL,
-  quality_method_flag VARCHAR(2),
-  reason_code         VARCHAR(3),
-  reason_description  VARCHAR(240),
-  version             INTEGER DEFAULT 0 NOT NULL,
+  id                 SERIAL            NOT NULL,
+  interval_day       INTEGER           NOT NULL REFERENCES interval_day (id),
+  start_interval     INTEGER           NOT NULL,
+  end_interval       INTEGER           NOT NULL,
+  quality            VARCHAR(1)        NOT NULL,
+  method             VARCHAR(2),
+  reason_code        VARCHAR(3),
+  reason_description VARCHAR(240),
+  version            INTEGER DEFAULT 0 NOT NULL,
   CONSTRAINT interval_event_pk PRIMARY KEY (id),
   CONSTRAINT interval_event_uk UNIQUE (interval_day, start_interval)
 );

@@ -4,9 +4,8 @@ package co.firefire.n12m.api
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Parameter
+import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -36,15 +35,12 @@ data class IntervalEvent(
         var startInterval: Int = -1,
         var endInterval: Int = -1,
 
-        @Enumerated(EnumType.STRING)
-        var qualityMethod: QualityMethod = QualityMethod.A
+        @Embedded
+        var intervalQuality: IntervalQuality = IntervalQuality(Quality.A)
 
 ) {
 
-    var reasonCode: String? = null
-    var reasonDescription: String? = null
-
     override fun toString(): String {
-        return "IntervalEvent(id=$id, intervalDay=$intervalDay, startInterval=$startInterval, endInterval=$endInterval, qualityMethod=$qualityMethod)"
+        return "IntervalEvent(id=$id, intervalDay=$intervalDay, startInterval=$startInterval, endInterval=$endInterval, intervalQuality=$intervalQuality)"
     }
 }

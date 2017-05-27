@@ -8,9 +8,8 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.regex.Pattern
 import javax.persistence.CascadeType
+import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -47,27 +46,25 @@ data class IntervalDay(
 
         var intervalDate: LocalDate = LocalDate.MIN,
 
-        @Enumerated(EnumType.STRING)
-        var qualityMethod: QualityMethod = QualityMethod.A,
-
-        var values: String = "",
-
-        @OneToMany(mappedBy = "intervalDay", cascade = arrayOf(CascadeType.ALL))
-        @MapKey(name = "startInterval")
-        @OrderBy("startInterval")
-        var intervalEvents: SortedMap<Int, IntervalEvent> = TreeMap()
+        @Embedded
+        var intervalQuality: IntervalQuality = IntervalQuality(Quality.A)
 
 ) {
 
-    var reasonCode: String? = null
-    var reasonDescription: String? = null
     var updateDateTime: LocalDateTime? = null
     var msatsLoadDateTime: LocalDateTime? = null
 
-    fun getIntervalVolumes(): Map<Int, Double> {
+    var values: String? = ""
+
+    @OneToMany(mappedBy = "intervalDay", cascade = arrayOf(CascadeType.ALL))
+    @MapKey(name = "startInterval")
+    @OrderBy("startInterval")
+    var intervalEvents: SortedMap<Int, IntervalEvent> = TreeMap()
+
+    fun getIntervalVolumes(): SortedMap<Int, Double> {
         var i: Int = 1
 
-        return values.split(VALUE_DELIMITER).associate({ Pair(i++, it.toDouble()) })
+        return TreeMap(values?.split(VALUE_DELIMITER)?.associate({ Pair(i++, it.toDouble()) }) ?: sortedMapOf())
     }
 
     override fun toString(): String {

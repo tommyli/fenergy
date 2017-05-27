@@ -43,18 +43,18 @@ data class NmiMeterRegister(
         var uom: UnitOfMeasure = UnitOfMeasure.KWH,
 
         @Convert(converter = IntervalLengthConverter::class)
-        var intervalLength: IntervalLength = IntervalLength.IL_30,
-
-        @OneToMany(mappedBy = "nmiMeterRegister", cascade = arrayOf(CascadeType.ALL))
-        @MapKey(name = "intervalDate")
-        @OrderBy("intervalDate")
-        var intervalDays: SortedMap<LocalDate, IntervalDay> = TreeMap()
+        var intervalLength: IntervalLength = IntervalLength.IL_30
 
 ) {
 
     var nmiConfig: String? = null
     var mdmDataStreamId: String? = null
-    var nextScheduledReadDate: LocalDate = LocalDate.MIN
+    var nextScheduledReadDate: LocalDate? = LocalDate.MIN
+
+    @OneToMany(mappedBy = "nmiMeterRegister", cascade = arrayOf(CascadeType.ALL))
+    @MapKey(name = "intervalDate")
+    @OrderBy("intervalDate")
+    var intervalDays: SortedMap<LocalDate, IntervalDay> = TreeMap()
 
     fun getDay(localDate: LocalDate): IntervalDay? {
         return intervalDays.get(localDate)
