@@ -91,7 +91,7 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
                 is Nem12RecordType.Record200 -> {
                     parsingContext.mergeNmiMeterRegisterResult()
 
-                    val nmi: String = parseMandatory("nmi", 1, lineNumber, { lineItems[11] })
+                    val nmi: String = parseMandatory("nmi", 1, lineNumber, { lineItems[1] })
                     val nmiConfig = parseOptional("nmiConfig", 2, lineNumber, { if (lineItems[2].isNotBlank()) lineItems[2] else null })
                     val registerId = parseMandatory("registerId", 3, lineNumber, { lineItems[3] })
                     val nmiSuffix = parseMandatory("nmiSuffix", 4, lineNumber, { lineItems[4] })
@@ -119,7 +119,7 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
                 }
             }
         } catch (e: Exception) {
-            errorCollector.addError("${e.message}")
+            errorCollector.addError("$e")
         }
     }
 
@@ -171,7 +171,7 @@ class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
                 nem12Line.handleLine(this, this)
             }
         } catch (e: Exception) {
-            errors.add("Error reading file: $e")
+            errors.add("Error reading file ${resource.filename}: $e")
         }
 
         println(errors)
