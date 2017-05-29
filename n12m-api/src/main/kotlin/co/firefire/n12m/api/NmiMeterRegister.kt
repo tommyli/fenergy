@@ -21,19 +21,6 @@ import org.hibernate.annotations.Parameter as HbmParameter
 @Entity
 data class NmiMeterRegister(
 
-        @Id
-        @HbmGenericGenerator(
-                name = "NmiMeterRegisterIdSeq",
-                strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-                parameters = arrayOf(
-                        HbmParameter(name = "sequence_name", value = "nmi_meter_register_id_seq"),
-                        HbmParameter(name = "initial_value", value = "1000"),
-                        HbmParameter(name = "increment_size", value = "1")
-                )
-        )
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NmiMeterRegisterIdSeq")
-        var id: Long = -1,
-
         var nmi: String = "",
         var meterSerial: String = "",
         var registerId: String = "",
@@ -47,6 +34,19 @@ data class NmiMeterRegister(
 
 ) {
 
+    @Id
+    @HbmGenericGenerator(
+            name = "NmiMeterRegisterIdSeq",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = arrayOf(
+                    HbmParameter(name = "sequence_name", value = "nmi_meter_register_id_seq"),
+                    HbmParameter(name = "initial_value", value = "1000"),
+                    HbmParameter(name = "increment_size", value = "1")
+            )
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NmiMeterRegisterIdSeq")
+    var id: Long? = -1
+
     var nmiConfig: String? = null
     var mdmDataStreamId: String? = null
     var nextScheduledReadDate: LocalDate? = LocalDate.MIN
@@ -58,6 +58,10 @@ data class NmiMeterRegister(
 
     fun getDay(localDate: LocalDate): IntervalDay? {
         return intervalDays.get(localDate)
+    }
+
+    fun putAllDays(days: Map<LocalDate, IntervalDay>) {
+        intervalDays.putAll(days)
     }
 
     override fun toString(): String {

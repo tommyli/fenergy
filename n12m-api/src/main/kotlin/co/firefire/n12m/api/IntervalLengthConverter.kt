@@ -9,19 +9,10 @@ import javax.persistence.Converter
 class IntervalLengthConverter : AttributeConverter<IntervalLength, Int> {
 
     override fun convertToEntityAttribute(dbData: Int?): IntervalLength? {
-        dbData?.let {
-            return IntervalLength.fromMinute(it)
-        }
-
-        return null
+        return if (dbData != null) IntervalLength.fromMinute(dbData) else dbData
     }
 
     override fun convertToDatabaseColumn(attribute: IntervalLength?): Int? {
-
-        attribute?.let {
-            return it.minute
-        }
-
-        return null
+        return if (attribute != null) attribute.minute else null
     }
 }
