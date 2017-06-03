@@ -44,17 +44,29 @@ CREATE TABLE IF NOT EXISTS interval_day (
 );
 ALTER SEQUENCE interval_day_id_seq RESTART WITH 1000 INCREMENT BY 50;
 
-CREATE TABLE IF NOT EXISTS interval_event (
-  id                 SERIAL            NOT NULL,
+CREATE TABLE IF NOT EXISTS interval_value (
   interval_day       INTEGER           NOT NULL REFERENCES interval_day (id),
-  start_interval     INTEGER           NOT NULL,
-  end_interval       INTEGER           NOT NULL,
+  interval           INTEGER           NOT NULL,
+  value              NUMERIC(10, 4)    NOT NULL,
   quality            VARCHAR(1)        NOT NULL,
   method             VARCHAR(2),
   reason_code        VARCHAR(3),
   reason_description VARCHAR(240),
   version            INTEGER DEFAULT 0 NOT NULL,
-  CONSTRAINT interval_event_pk PRIMARY KEY (id),
-  CONSTRAINT interval_event_uk UNIQUE (interval_day, start_interval)
+  CONSTRAINT interval_value_pk PRIMARY KEY (interval_day, interval)
 );
-ALTER SEQUENCE interval_event_id_seq RESTART WITH 1000;
+
+-- CREATE TABLE IF NOT EXISTS interval_event (
+--   id                 SERIAL            NOT NULL,
+--   interval_day       INTEGER           NOT NULL REFERENCES interval_day (id),
+--   start_interval     INTEGER           NOT NULL,
+--   end_interval       INTEGER           NOT NULL,
+--   quality            VARCHAR(1)        NOT NULL,
+--   method             VARCHAR(2),
+--   reason_code        VARCHAR(3),
+--   reason_description VARCHAR(240),
+--   version            INTEGER DEFAULT 0 NOT NULL,
+--   CONSTRAINT interval_event_pk PRIMARY KEY (id),
+--   CONSTRAINT interval_event_uk UNIQUE (interval_day, start_interval)
+-- );
+-- ALTER SEQUENCE interval_event_id_seq RESTART WITH 1000;

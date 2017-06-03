@@ -9,7 +9,7 @@ enum class IntervalLength(val minute: Int) {
 
     companion object Factory {
         fun fromMinute(minute: Int): IntervalLength {
-            return IntervalLength.values().find { it.minute == minute } ?: throw RuntimeException("Given value [$minute] is not a valid IntervalLength")
+            return IntervalLength.values().find { it.minute == minute } ?: throw DomainException("Given value [$minute] is not a valid IntervalLength")
         }
     }
 }

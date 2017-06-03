@@ -2,9 +2,10 @@
 
 package co.firefire.n12m.api
 
-import java.time.LocalDate
-
 import spock.lang.Specification
+
+import static co.firefire.n12m.api.TestUtils.dt
+import static co.firefire.n12m.api.TestUtils.dts
 
 class IntervalDaySpec extends Specification {
 
@@ -12,65 +13,29 @@ class IntervalDaySpec extends Specification {
 
   IntervalDay underTest
 
-  def 'getVolumes() parses values correct'() {
+  def 'mergeIntervalValues() correctly determines which IntervalValue overrides'() {
     given:
-    nmiMeterRegister.intervalLength = IntervalLength.IL_30
-    underTest = new IntervalDay(-1, nmiMeterRegister, LocalDate.MIN, new IntervalQuality(Quality.A))
-    underTest.values = '1,2,-3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,-47,48'
+    underTest = new IntervalDay(nmiMeterRegister, dt('2017-01-01'), new IntervalQuality(Quality.A))
+    underTest.updateDateTime = null
+    underTest.msatsLoadDateTime = dts('2017-01-01 20:28:28')
+    underTest.intervalValues = new TreeMap<>([
+      1: new IntervalValue(1, 1.8, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(2, 2.8, new IntervalQuality(Quality.E)),
+      3: new IntervalValue(3, 3.8, new IntervalQuality(Quality.A))
+    ])
 
     when:
-    Map<Integer, BigDecimal> actualResult = underTest.getIntervalVolumes()
+    underTest.mergeNewIntervalValues(new TreeMap<>(
+      1: new IntervalValue(1, 1.81, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(2, 2.81, new IntervalQuality(Quality.A)),
+      3: new IntervalValue(3, 3.81, new IntervalQuality(Quality.E))
+    ), null, dts('2017-01-01 20:28:28'))
 
     then:
-    actualResult == [
-      1 : 1,
-      2 : 2,
-      3 : -3,
-      4 : 4,
-      5 : 5,
-      6 : 6,
-      7 : 7,
-      8 : 8,
-      9 : 9,
-      10: 10,
-      11: 11,
-      12: 12,
-      13: 13,
-      14: 14,
-      15: 15,
-      16: 16,
-      17: 17,
-      18: 18,
-      19: 19,
-      20: 20,
-      21: 21,
-      22: 22,
-      23: 23,
-      24: 24,
-      25: 25,
-      26: 26,
-      27: 27,
-      28: 28,
-      29: 29,
-      30: 30,
-      31: 31,
-      32: 32,
-      33: 33,
-      34: 34,
-      35: 35,
-      36: 36,
-      37: 37,
-      38: 38,
-      39: 39,
-      40: 40,
-      41: 41,
-      42: 42,
-      43: 43,
-      44: 44,
-      45: 45,
-      46: 46,
-      47: -47,
-      48: 48
-    ]
+    underTest.intervalValues == new TreeMap<>(
+      1: new IntervalValue(1, 1.81, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(2, 2.81, new IntervalQuality(Quality.A)),
+      3: new IntervalValue(3, 3.8, new IntervalQuality(Quality.A))
+    )
   }
 }

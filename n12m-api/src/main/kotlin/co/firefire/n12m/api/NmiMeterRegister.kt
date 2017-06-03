@@ -2,7 +2,9 @@
 
 package co.firefire.n12m.api
 
+import java.time.Duration
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.CascadeType
 import javax.persistence.Convert
@@ -60,8 +62,36 @@ data class NmiMeterRegister(
         return intervalDays.get(localDate)
     }
 
+    fun putDay(intervalDay: IntervalDay) {
+        intervalDays.put(intervalDay.intervalDate, intervalDay)
+    }
+
     fun putAllDays(days: Map<LocalDate, IntervalDay>) {
         intervalDays.putAll(days)
+    }
+
+    fun intervalRange(): IntRange {
+        return 1..(Duration.ofDays(1).toMinutes().toInt() / intervalLength.minute)
+    }
+
+    fun mergeIntervalDay(newIntervalDay: IntervalDay) {
+        intervalDays.merge(newIntervalDay.intervalDate, newIntervalDay, { existing: IntervalDay, new: IntervalDay ->
+            if (existing.intervalQuality.quality == Quality.V || new.intervalQuality.quality == Quality.V) {
+                existing.mergeNewIntervalValues(new.intervalValues, new.updateDateTime, new.msatsLoadDateTime)
+                existing
+            } else {
+                val existingIntervalDayDateTime = existing.updateDateTime ?: existing.msatsLoadDateTime ?: LocalDateTime.now()
+                val newIntervalDayDateTime = new.updateDateTime ?: new.msatsLoadDateTime ?: LocalDateTime.now()
+                val existingQuality = TimestampedQuality(existing.intervalQuality.quality, existingIntervalDayDateTime)
+                val newQuality = TimestampedQuality(new.intervalQuality.quality, newIntervalDayDateTime)
+
+                if (newQuality >= existingQuality) {
+                    new
+                } else {
+                    existing
+                }
+            }
+        })
     }
 
     override fun toString(): String {
