@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS interval_day (
   reason_description   VARCHAR(240),
   update_date_time     TIMESTAMP,
   msats_load_date_time TIMESTAMP,
-  values               VARCHAR(500),
   version              INT DEFAULT 0 NOT NULL,
   CONSTRAINT interval_day_pk PRIMARY KEY (id),
   CONSTRAINT interval_day_uk UNIQUE (nmi_meter_register, interval_date)
@@ -55,18 +54,3 @@ CREATE TABLE IF NOT EXISTS interval_value (
   version            INTEGER DEFAULT 0 NOT NULL,
   CONSTRAINT interval_value_pk PRIMARY KEY (interval_day, interval)
 );
-
--- CREATE TABLE IF NOT EXISTS interval_event (
---   id                 SERIAL            NOT NULL,
---   interval_day       INTEGER           NOT NULL REFERENCES interval_day (id),
---   start_interval     INTEGER           NOT NULL,
---   end_interval       INTEGER           NOT NULL,
---   quality            VARCHAR(1)        NOT NULL,
---   method             VARCHAR(2),
---   reason_code        VARCHAR(3),
---   reason_description VARCHAR(240),
---   version            INTEGER DEFAULT 0 NOT NULL,
---   CONSTRAINT interval_event_pk PRIMARY KEY (id),
---   CONSTRAINT interval_event_uk UNIQUE (interval_day, start_interval)
--- );
--- ALTER SEQUENCE interval_event_id_seq RESTART WITH 1000;

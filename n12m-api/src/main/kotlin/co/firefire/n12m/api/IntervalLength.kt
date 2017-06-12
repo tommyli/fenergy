@@ -4,6 +4,9 @@ package co.firefire.n12m.api
 
 enum class IntervalLength(val minute: Int) {
 
+    IL_1(1),
+    IL_5(5),
+    IL_10(10),
     IL_15(15),
     IL_30(30);
 

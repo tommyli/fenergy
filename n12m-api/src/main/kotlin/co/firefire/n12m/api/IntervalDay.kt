@@ -7,22 +7,23 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import java.util.regex.Pattern
-import javax.persistence.CollectionTable
-import javax.persistence.ElementCollection
+import javax.persistence.CascadeType
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.MapKey
+import javax.persistence.OneToMany
 import javax.persistence.OrderBy
 import org.hibernate.annotations.GenericGenerator as HbmGenericGenerator
 import org.hibernate.annotations.Parameter as HbmParameter
 import javax.persistence.Transient as JpaTransient
 
-val MINUTES_IN_DAY: Long = Duration.ofDays(1).toMinutes()
+val MINUTES_IN_DAY: Int = Duration.ofDays(1).toMinutes().toInt()
 private val VALUE_DELIMITER: Pattern = ",".toPattern()
 
 @Entity
@@ -59,13 +60,9 @@ data class IntervalDay(
     @Transient
     var intervalEvents: MutableMap<IntRange, IntervalEvent> = mutableMapOf()
 
-    @ElementCollection
-    @CollectionTable(
-            name = "interval_value",
-            joinColumns = arrayOf(JoinColumn(name = "interval_day", referencedColumnName = "id", nullable = false))
-    )
-    @MapKey(name = "interval")
-    @OrderBy("interval")
+    @OneToMany(mappedBy = "id.intervalDay", cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
+    @MapKey(name = "id.interval")
+    @OrderBy("id.interval")
     var intervalValues: SortedMap<Int, IntervalValue> = TreeMap()
 
     fun applyIntervalEvents() {
@@ -74,7 +71,7 @@ data class IntervalDay(
         if (intervalQuality.quality == Quality.V) {
             intervalValues = TreeMap(intervalValues.mapValues { (interval, intervalValue) ->
                 val newQuality = intervalEvents.values.find { it.intervalRange.contains(interval) }?.intervalQuality ?: IntervalQuality(Quality.A)
-                IntervalValue(interval, intervalValue.value, newQuality)
+                IntervalValue(this, interval, intervalValue.value, newQuality)
             })
         }
     }

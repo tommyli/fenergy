@@ -2,21 +2,42 @@
 
 package co.firefire.n12m.api
 
-import javax.persistence.Embeddable
+import java.io.Serializable
+import java.math.BigDecimal
 import javax.persistence.Embedded
+import javax.persistence.EmbeddedId
+import javax.persistence.Entity
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 
-@Embeddable
+@Entity
 data class IntervalValue(
 
-        var interval: Int = -1,
+        @EmbeddedId
+        var id: IntervalKey = IntervalKey(),
 
-        var value: Double = 0.0,
+        var value: BigDecimal = BigDecimal.ZERO,
 
         @Embedded
         var intervalQuality: IntervalQuality = IntervalQuality(Quality.A)
 ) {
 
+    constructor(intervalDay: IntervalDay, interval: Int, value: BigDecimal, intervalQuality: IntervalQuality) : this(IntervalKey(intervalDay, interval), value, intervalQuality)
+
+    val intervalDay get() = id.intervalDay
+
+    val interval get() = id.interval
+
     override fun toString(): String {
-        return "IntervalValue(interval=$interval, value=$value, intervalQuality=$intervalQuality)"
+        return "IntervalValue(intervalDay=$intervalDay, interval=$interval, value=$value, intervalQuality=$intervalQuality)"
     }
 }
+
+data class IntervalKey(
+
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "interval_day", referencedColumnName = "id", nullable = false)
+        var intervalDay: IntervalDay = IntervalDay(),
+
+        var interval: Int = -1
+) : Serializable

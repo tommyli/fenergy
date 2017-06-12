@@ -5,6 +5,7 @@ package co.firefire.n12m.api
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import java.io.InputStreamReader
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -118,11 +119,14 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
 
                     val currNmiMeterRegister = parsingContext.getCurrentNmiMeterRegister()
                     if (currNmiMeterRegister != null) {
+
                         val intervalDate = parseMandatory("intervalDate", 1, lineNumber, lineItems, { LocalDate.parse(it, DateTimeFormatter.BASIC_ISO_DATE) })
                         val quality = parseMandatory("intervalQuality", 50, lineNumber, lineItems, { Quality.valueOf(it.substring(0, 1)) })
                         val qualityMethod = parseOptional("qualityMethod", 50, lineNumber, lineItems, { it?.substring(1, 3) ?: "" })
                         var interval = 1
-                        val values = parseMandatory("values", 2, lineNumber, lineItems, { lineItems.subList(2, 50).associateBy({ interval++ }, { it.toDouble() }) })
+                        val valuesOffset = 2
+                        val valuesCount: Int = (MINUTES_IN_DAY / currNmiMeterRegister.intervalLength.minute)
+                        val values = parseMandatory("values", 2, lineNumber, lineItems, { lineItems.subList(valuesOffset, valuesCount + valuesOffset).associateBy({ interval++ }, { BigDecimal(it) }) })
                         val reasonCode = parseOptional("reasonCode", 51, lineNumber, lineItems, { it })
                         val reasonDescription = parseOptional("reasonDescription", 52, lineNumber, lineItems, { it })
                         val updateDateTime = parseOptional("updateDateTime", 53, lineNumber, lineItems, { LocalDateTime.parse(it, DEFAULT_DATE_TIME_FORMATTER) })
@@ -134,6 +138,7 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
                         intervalDay.msatsLoadDateTime = msatsLoadDateTime
                         intervalDay.mergeNewIntervalValues(values.mapValues { (interval, value) ->
                             IntervalValue(
+                                    intervalDay,
                                     interval,
                                     value,
                                     IntervalQuality(if (quality == Quality.V) Quality.A else quality))
@@ -167,6 +172,7 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
                     log.info("Ignoring Record Type 500")
                 }
                 is Nem12RecordType.Record900 -> {
+                    parsingContext.mergeIntervalDayResult()
                     parsingContext.mergeNmiMeterRegisterResult()
                 }
             }
@@ -196,7 +202,7 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
         return try {
             if (lineItems[position].isNotBlank()) transformer(lineItems[position]) else null
         } catch (e: Exception) {
-            log.warn("Warning parsing $propertyName, position $position, line $lineNumber, exception: $e, cause: ${e.cause}")
+            log.debug("Parsing $propertyName, position $position, line $lineNumber, exception: $e, cause: ${e.cause}")
             null
         }
     }
@@ -235,7 +241,7 @@ class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
     override fun parseNem12Resource(resource: Resource): Collection<NmiMeterRegister> {
         try {
             InputStreamReader(resource.inputStream).forEachNem12Line(
-                    NEM12_DELIMITER, { it.handleLine(this, this) }, { mergeNmiMeterRegisterResult() })
+                    NEM12_DELIMITER, { it.handleLine(this, this) }, { mergeIntervalDayResult(); mergeNmiMeterRegisterResult() })
         } catch (e: Exception) {
             errors.add("Error reading file ${resource.filename}: $e")
         }
@@ -277,7 +283,7 @@ class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
             val existingNmiMeterRegister = result.find { it.nmi == currNmiMeterRegister.nmi && it.meterSerial == currNmiMeterRegister.meterSerial && it.registerId == currNmiMeterRegister.registerId && it.nmiSuffix == currNmiMeterRegister.nmiSuffix }
 
             if (existingNmiMeterRegister != null) {
-                existingNmiMeterRegister.putAllDays(currNmiMeterRegister.intervalDays)
+                existingNmiMeterRegister.mergeIntervalDays(currNmiMeterRegister.intervalDays.values)
             } else {
                 result.add(currNmiMeterRegister)
             }

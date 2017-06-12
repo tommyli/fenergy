@@ -74,6 +74,10 @@ data class NmiMeterRegister(
         return 1..(Duration.ofDays(1).toMinutes().toInt() / intervalLength.minute)
     }
 
+    fun mergeIntervalDays(newIntervalDays: Collection<IntervalDay>) {
+        newIntervalDays.forEach({ mergeIntervalDay(it) })
+    }
+
     fun mergeIntervalDay(newIntervalDay: IntervalDay) {
         intervalDays.merge(newIntervalDay.intervalDate, newIntervalDay, { existing: IntervalDay, new: IntervalDay ->
             if (existing.intervalQuality.quality == Quality.V || new.intervalQuality.quality == Quality.V) {
