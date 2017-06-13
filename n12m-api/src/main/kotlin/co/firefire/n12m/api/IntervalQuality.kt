@@ -25,11 +25,15 @@ data class IntervalQuality(
         val quality: Quality = Quality.A
 ) {
 
-    constructor(quality: Quality, method: String?, reasonCode: String?, reasonDescription: String?) : this(quality)
+    constructor(quality: Quality, method: String?, reasonCode: String?, reasonDescription: String?) : this(quality) {
+        this.method = method
+        this.reasonCode = reasonCode
+        this.reasonDescription = reasonDescription
+    }
 
-    val method: String? = null
-    val reasonCode: String? = null
-    val reasonDescription: String? = null
+    var method: String? = null
+    var reasonCode: String? = null
+    var reasonDescription: String? = null
 
     override fun toString(): String {
         return "IntervalQuality(intervalQuality=$quality)"

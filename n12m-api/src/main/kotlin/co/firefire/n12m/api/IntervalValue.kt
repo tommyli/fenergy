@@ -4,6 +4,8 @@ package co.firefire.n12m.api
 
 import java.io.Serializable
 import java.math.BigDecimal
+import javax.persistence.CascadeType
+import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
@@ -24,20 +26,24 @@ data class IntervalValue(
 
     constructor(intervalDay: IntervalDay, interval: Int, value: BigDecimal, intervalQuality: IntervalQuality) : this(IntervalKey(intervalDay, interval), value, intervalQuality)
 
+    var version: Int? = 0
+
     val intervalDay get() = id.intervalDay
 
     val interval get() = id.interval
 
     override fun toString(): String {
-        return "IntervalValue(intervalDay=$intervalDay, interval=$interval, value=$value, intervalQuality=$intervalQuality)"
+        return "IntervalValue(intervalDay=${intervalDay}, interval=${interval}, value=$value, intervalQuality=$intervalQuality)"
     }
 }
 
+@Embeddable
 data class IntervalKey(
 
-        @ManyToOne(optional = false)
+        @ManyToOne(optional = false, cascade = arrayOf(CascadeType.ALL))
         @JoinColumn(name = "interval_day", referencedColumnName = "id", nullable = false)
         var intervalDay: IntervalDay = IntervalDay(),
 
         var interval: Int = -1
+
 ) : Serializable

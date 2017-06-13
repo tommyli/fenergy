@@ -47,13 +47,15 @@ data class NmiMeterRegister(
             )
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NmiMeterRegisterIdSeq")
-    var id: Long? = -1
+    var id: Long? = null
+
+    var version: Int? = 0
 
     var nmiConfig: String? = null
     var mdmDataStreamId: String? = null
     var nextScheduledReadDate: LocalDate? = LocalDate.MIN
 
-    @OneToMany(mappedBy = "nmiMeterRegister", cascade = arrayOf(CascadeType.ALL))
+    @OneToMany(mappedBy = "nmiMeterRegister", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
     @MapKey(name = "intervalDate")
     @OrderBy("intervalDate")
     var intervalDays: SortedMap<LocalDate, IntervalDay> = TreeMap()
@@ -90,6 +92,7 @@ data class NmiMeterRegister(
                 val newQuality = TimestampedQuality(new.intervalQuality.quality, newIntervalDayDateTime)
 
                 if (newQuality >= existingQuality) {
+                    new.nmiMeterRegister = this
                     new
                 } else {
                     existing

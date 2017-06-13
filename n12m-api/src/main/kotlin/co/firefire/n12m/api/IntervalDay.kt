@@ -10,7 +10,6 @@ import java.util.regex.Pattern
 import javax.persistence.CascadeType
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -51,7 +50,9 @@ data class IntervalDay(
             )
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IntervalDayIdSeq")
-    var id: Long = -1
+    var id: Long? = null
+
+    var version: Int? = 0
 
     var updateDateTime: LocalDateTime? = null
     var msatsLoadDateTime: LocalDateTime? = null
@@ -60,7 +61,7 @@ data class IntervalDay(
     @Transient
     var intervalEvents: MutableMap<IntRange, IntervalEvent> = mutableMapOf()
 
-    @OneToMany(mappedBy = "id.intervalDay", cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "id.intervalDay", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
     @MapKey(name = "id.interval")
     @OrderBy("id.interval")
     var intervalValues: SortedMap<Int, IntervalValue> = TreeMap()
@@ -88,6 +89,7 @@ data class IntervalDay(
                 val existingQuality = TimestampedQuality(existing.intervalQuality.quality, existingDateTime)
                 val newQuality = TimestampedQuality(new.intervalQuality.quality, newDateTime)
                 if (newQuality >= existingQuality) {
+                    new.id = IntervalKey(this, newInterval)
                     new
                 } else {
                     existing
