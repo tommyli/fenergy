@@ -47,15 +47,15 @@ class Nem12LineSpec extends Specification {
 
     where:
     lineItems                                                               | expError
-    ['']                                                                    | 'java.lang.RuntimeException: Error parsing nmi, position 1, line 2, exception: java.lang.IndexOutOfBoundsException: Index: 1, Size: 1, cause: null'
-    ['200', '', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '30', '']           | 'java.lang.RuntimeException: Error parsing nmi, position 1, line 2, exception: java.lang.RuntimeException: nmi is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', '', 'E1', '', '1236594', 'KWH', '30', '']   | 'java.lang.RuntimeException: Error parsing registerId, position 3, line 2, exception: java.lang.RuntimeException: registerId is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', 'E1', '', '', '1236594', 'KWH', '30', '']   | 'java.lang.RuntimeException: Error parsing nmiSuffix, position 4, line 2, exception: java.lang.RuntimeException: nmiSuffix is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', 'E1', 'E1', '', '', 'KWH', '30', '']        | 'java.lang.RuntimeException: Error parsing meterSerial, position 6, line 2, exception: java.lang.RuntimeException: meterSerial is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', '', '30', '']    | 'java.lang.RuntimeException: Error parsing uom, position 7, line 2, exception: java.lang.RuntimeException: uom is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KW', '30', '']  | 'java.lang.RuntimeException: Error parsing uom, position 7, line 2, exception: java.lang.IllegalArgumentException: No enum constant co.firefire.n12m.api.UnitOfMeasure.KW, cause: null'
-    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '', '']   | 'java.lang.RuntimeException: Error parsing intervalLength, position 8, line 2, exception: java.lang.RuntimeException: intervalLength is mandatory and cannot be blank, cause: null'
-    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '20', ''] | 'java.lang.RuntimeException: Error parsing intervalLength, position 8, line 2, exception: java.lang.RuntimeException: Given value [20] is not a valid IntervalLength, cause: null'
+    ['']                                                                    | 'co.firefire.n12m.api.DomainException: Error parsing nmi, position 1, line 2, exception: java.lang.IndexOutOfBoundsException: Index: 1, Size: 1, cause: null'
+    ['200', '', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '30', '']           | 'co.firefire.n12m.api.DomainException: Error parsing nmi, position 1, line 2, exception: co.firefire.n12m.api.DomainException: nmi is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', '', 'E1', '', '1236594', 'KWH', '30', '']   | 'co.firefire.n12m.api.DomainException: Error parsing registerId, position 3, line 2, exception: co.firefire.n12m.api.DomainException: registerId is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', 'E1', '', '', '1236594', 'KWH', '30', '']   | 'co.firefire.n12m.api.DomainException: Error parsing nmiSuffix, position 4, line 2, exception: co.firefire.n12m.api.DomainException: nmiSuffix is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', 'E1', 'E1', '', '', 'KWH', '30', '']        | 'co.firefire.n12m.api.DomainException: Error parsing meterSerial, position 6, line 2, exception: co.firefire.n12m.api.DomainException: meterSerial is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', '', '30', '']    | 'co.firefire.n12m.api.DomainException: Error parsing uom, position 7, line 2, exception: co.firefire.n12m.api.DomainException: uom is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KW', '30', '']  | 'co.firefire.n12m.api.DomainException: Error parsing uom, position 7, line 2, exception: java.lang.IllegalArgumentException: No enum constant co.firefire.n12m.api.UnitOfMeasure.KW, cause: null'
+    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '', '']   | 'co.firefire.n12m.api.DomainException: Error parsing intervalLength, position 8, line 2, exception: co.firefire.n12m.api.DomainException: intervalLength is mandatory and cannot be blank, cause: null'
+    ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '20', ''] | 'co.firefire.n12m.api.DomainException: Error parsing intervalLength, position 8, line 2, exception: co.firefire.n12m.api.DomainException: Given value [20] is not a valid IntervalLength, cause: null'
   }
 
   def 'Valid 300 record is parsed correctly'() {
@@ -69,10 +69,7 @@ class Nem12LineSpec extends Specification {
     underTest.handleLine(mockParserContext, mockErrorCollector)
 
     then:
-    IntervalDay actualResult = nmiMeterRegister.intervalDays.get(dt('2014-11-26'))
-    actualResult.nmiMeterRegister == nmiMeterRegister
-    actualResult == expIntervalDay
-//    actualResult.values == validValues.join(',')
+    1 * mockParserContext.updateCurrentIntervalDay(expIntervalDay)
   }
 
   @Unroll
@@ -97,10 +94,10 @@ class Nem12LineSpec extends Specification {
       ['300', '20170101'] + validValues + ['B', '', '', '20141127021242', '']
     ]
     expError << [
-      'java.lang.RuntimeException: Error parsing intervalDate, position 1, line 3, exception: java.lang.RuntimeException: intervalDate is mandatory and cannot be blank, cause: null',
-      'java.lang.RuntimeException: Error parsing intervalDate, position 1, line 3, exception: java.time.format.DateTimeParseException: Text \'abc\' could not be parsed at index 0, cause: null',
-      'java.lang.RuntimeException: Error parsing intervalQuality, position 50, line 3, exception: java.lang.RuntimeException: intervalQuality is mandatory and cannot be blank, cause: null',
-      'java.lang.RuntimeException: Error parsing intervalQuality, position 50, line 3, exception: java.lang.IllegalArgumentException: No enum constant co.firefire.n12m.api.Quality.B, cause: null'
+      'co.firefire.n12m.api.DomainException: Error parsing intervalDate, position 1, line 3, exception: co.firefire.n12m.api.DomainException: intervalDate is mandatory and cannot be blank, cause: null',
+      'co.firefire.n12m.api.DomainException: Error parsing intervalDate, position 1, line 3, exception: java.time.format.DateTimeParseException: Text \'abc\' could not be parsed at index 0, cause: null',
+      'co.firefire.n12m.api.DomainException: Error parsing intervalQuality, position 50, line 3, exception: co.firefire.n12m.api.DomainException: intervalQuality is mandatory and cannot be blank, cause: null',
+      'co.firefire.n12m.api.DomainException: Error parsing intervalQuality, position 50, line 3, exception: java.lang.IllegalArgumentException: No enum constant co.firefire.n12m.api.Quality.B, cause: null'
     ]
   }
 }
