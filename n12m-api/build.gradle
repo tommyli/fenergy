@@ -80,3 +80,11 @@ bootRun {
     systemProperties = sysProps
   }
 }
+
+test {
+  testLogging {
+    events 'passed', 'skipped', 'failed', 'standardError'
+    minGranularity 2
+    maxGranularity 2
+  }
+}
