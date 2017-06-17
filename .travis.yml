@@ -3,13 +3,14 @@ language: java
 jdk:
   - oraclejdk8
 
+sudo: false
 dist: trusty
 
 services:
   - postgresql
 
 addons:
-  postgresql: "9.5"
+  postgresql: "9.6"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
