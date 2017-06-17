@@ -1,6 +1,9 @@
 -- Tommy Li (tommy.li@firefire.co), 2017-05-13
 
 -- Initial user setup script, run as postgres user
+CREATE DATABASE prod;
+CREATE DATABASE ci;
+
 DROP SCHEMA IF EXISTS n12m CASCADE;
 REVOKE ALL PRIVILEGES ON DATABASE prod FROM n12m;
 REVOKE ALL PRIVILEGES ON DATABASE prod FROM n12mread;
