@@ -1,0 +1,21 @@
+language: java
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.5"
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+before_script:
+  - psql -f n12m-db/src/main/sql/setup_db.sql -U postgres
+
+script:
+  - ./gradlew n12m-db:setupTestData check

@@ -19,23 +19,23 @@ class IntervalDaySpec extends Specification {
     underTest.updateDateTime = null
     underTest.msatsLoadDateTime = dts('2017-01-01 20:28:28')
     underTest.intervalValues = new TreeMap<>([
-      1: new IntervalValue(1, 1.8, new IntervalQuality(Quality.A)),
-      2: new IntervalValue(2, 2.8, new IntervalQuality(Quality.E)),
-      3: new IntervalValue(3, 3.8, new IntervalQuality(Quality.A))
+      1: new IntervalValue(underTest, 1, 1.8, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(underTest, 2, 2.8, new IntervalQuality(Quality.E)),
+      3: new IntervalValue(underTest, 3, 3.8, new IntervalQuality(Quality.A))
     ])
 
     when:
     underTest.mergeNewIntervalValues(new TreeMap<>(
-      1: new IntervalValue(1, 1.81, new IntervalQuality(Quality.A)),
-      2: new IntervalValue(2, 2.81, new IntervalQuality(Quality.A)),
-      3: new IntervalValue(3, 3.81, new IntervalQuality(Quality.E))
+      1: new IntervalValue(underTest, 1, 1.81, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(underTest, 2, 2.81, new IntervalQuality(Quality.A)),
+      3: new IntervalValue(underTest, 3, 3.81, new IntervalQuality(Quality.E))
     ), null, dts('2017-01-01 20:28:28'))
 
     then:
     underTest.intervalValues == new TreeMap<>(
-      1: new IntervalValue(1, 1.81, new IntervalQuality(Quality.A)),
-      2: new IntervalValue(2, 2.81, new IntervalQuality(Quality.A)),
-      3: new IntervalValue(3, 3.8, new IntervalQuality(Quality.A))
+      1: new IntervalValue(underTest, 1, 1.81, new IntervalQuality(Quality.A)),
+      2: new IntervalValue(underTest, 2, 2.81, new IntervalQuality(Quality.A)),
+      3: new IntervalValue(underTest, 3, 3.8, new IntervalQuality(Quality.A))
     )
   }
 }

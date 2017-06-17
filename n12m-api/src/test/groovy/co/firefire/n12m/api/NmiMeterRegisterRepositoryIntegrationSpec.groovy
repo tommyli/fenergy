@@ -7,14 +7,12 @@ import java.time.LocalDateTime
 import javax.annotation.Resource
 
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
 import static co.firefire.n12m.api.TestUtils.dt
 import static co.firefire.n12m.api.TestUtils.dts
 
-@Commit
 @Transactional
 @SpringBootTest
 class NmiMeterRegisterRepositoryIntegrationSpec extends Specification {

@@ -36,14 +36,14 @@ dependencies {
 flyway {
   driver = project.property('n12m.db.driver')
   schemas = [project.property('n12m.db.schema')]
-  url = project.property('n12m.ci.db.url')
-  user = project.property('n12m.ci.db.userid')
-  password = project.property('n12m.ci.db.password')
+  url = project.property('n12m.test.db.url')
+  user = project.property('n12m.test.db.userid')
+  password = project.property('n12m.test.db.password')
   locations = ["filesystem:${project.projectDir}/src/main/sql/migrations/"]
   placeholderReplacement = true
   placeholders = [
     'schemaName': project.property('n12m.db.schema'),
-    'dbUserId': project.property('n12m.ci.db.userid')
+    'dbUserId': project.property('n12m.test.db.userid')
   ]
   skipDefaultResolvers = false
   skipDefaultCallbacks = false
@@ -64,9 +64,9 @@ task flywayMigrateProd(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 flywayMigrate.dependsOn flywayClean
 
 task setupTestData(type: RunSqlScriptTask, dependsOn: flywayMigrate) {
-  url = project.property('n12m.ci.db.url')
-  userid = project.property('n12m.ci.db.userid')
-  password = project.property('n12m.ci.db.password')
+  url = project.property('n12m.test.db.url')
+  userid = project.property('n12m.test.db.userid')
+  password = project.property('n12m.test.db.password')
   scripts = [
     'insert_test_data.sql'
   ]
