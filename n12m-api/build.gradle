@@ -11,6 +11,7 @@ buildscript {
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
   }
 }
 
@@ -26,6 +27,7 @@ ext {
 
 apply plugin: 'kotlin'
 apply plugin: 'groovy'
+apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'org.springframework.boot'
 
 repositories {
@@ -70,6 +72,10 @@ def sysProps = [
   'n12m.db.password': project.property('n12m.db.password')
 ]
 
+springBoot {
+  executable = true
+}
+
 bootRun {
   jvmArgs = ['-Dspring.output.ansi.enabled=always']
   systemProperties = sysProps
@@ -78,6 +84,13 @@ bootRun {
 [bootRun, test].each { task ->
   configure(task) {
     systemProperties = sysProps
+  }
+}
+
+appengine {
+  deploy {
+    stopPreviousVersion = true
+    promote = true
   }
 }
 

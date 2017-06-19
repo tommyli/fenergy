@@ -1,0 +1,30 @@
+# Tommy Li (tommy.li@firefire.co), 2017-06-20
+
+runtime: java
+env: flex
+
+runtime_config:
+   jdk: openjdk8
+
+handlers:
+- url: /.*
+  script: this field is required, but ignored
+
+resources:
+  cpu: 1
+  memory_gb: 0.6
+  disk_size_gb: 10
+
+health_check:
+  enable_health_check: False
+  check_interval_sec: 5
+  timeout_sec: 4
+  unhealthy_threshold: 2
+  healthy_threshold: 2
+
+env_variables:
+  n12m_db_driver: org.postgresql.Driver
+  n12m_db_schema: n12m
+  n12m_db_url: jdbc:postgresql://localhost/test
+  n12m_db_userid: username
+  n12m_db_password: password

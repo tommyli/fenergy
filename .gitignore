@@ -10,3 +10,4 @@ build/
 .settings
 .classpath
 *.log
+n12m-api/src/main/appengine/app.yaml
