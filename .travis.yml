@@ -24,7 +24,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_script:
-  - psql -f n12m-db/src/main/sql/setup_db.sql -U postgres
+  - psql -f n12m-api/src/main/resources/db/setup_db.sql -U postgres
 
 script:
-  - ./gradlew n12m-db:setupTestData check
+  - ./gradlew setupTestData build

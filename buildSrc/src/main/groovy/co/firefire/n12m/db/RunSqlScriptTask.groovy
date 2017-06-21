@@ -24,7 +24,7 @@ class RunSqlScriptTask extends DefaultTask {
         delimiter: ";"
       ) {
         classpath(path: project.configurations.runtime.asPath)
-        fileset(dir: "src/main/sql/test-data", includes: script)
+        fileset(dir: "src/main/resources/db/test-data", includes: script)
       }
     }
   }
