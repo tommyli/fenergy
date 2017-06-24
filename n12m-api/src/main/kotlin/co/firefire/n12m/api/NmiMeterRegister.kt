@@ -64,12 +64,12 @@ data class NmiMeterRegister(
         return intervalDays.get(localDate)
     }
 
-    fun putDay(intervalDay: IntervalDay) {
-        intervalDays.put(intervalDay.intervalDate, intervalDay)
-    }
-
-    fun putAllDays(days: Map<LocalDate, IntervalDay>) {
-        intervalDays.putAll(days)
+    fun getVolumeType(): VolumeType {
+        return when {
+            nmiSuffix.startsWith("E") -> VolumeType.CONSUMPTION
+            nmiSuffix.startsWith("B") -> VolumeType.GENERATION
+            else -> VolumeType.OTHER
+        }
     }
 
     fun intervalRange(): IntRange {

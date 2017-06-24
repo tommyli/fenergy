@@ -2,11 +2,11 @@
 
 package co.firefire.n12m.api
 
+import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import java.util.regex.Pattern
 import javax.persistence.CascadeType
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -23,7 +23,10 @@ import org.hibernate.annotations.Parameter as HbmParameter
 import javax.persistence.Transient as JpaTransient
 
 val MINUTES_IN_DAY: Int = Duration.ofDays(1).toMinutes().toInt()
-private val VALUE_DELIMITER: Pattern = ",".toPattern()
+
+inline fun <T> Iterable<T>.sumByBigDecimal(selector: (T) -> BigDecimal): BigDecimal {
+    return this.fold(BigDecimal.ZERO) { acc, t -> acc + selector(t) }
+}
 
 @Entity
 data class IntervalDay(
@@ -65,6 +68,10 @@ data class IntervalDay(
     @MapKey(name = "id.interval")
     @OrderBy("id.interval")
     var intervalValues: SortedMap<Int, IntervalValue> = TreeMap()
+
+    fun getTotal(): BigDecimal {
+        return intervalValues.values.sumByBigDecimal { it.value }
+    }
 
     fun applyIntervalEvents() {
         assert(intervalValues.all { it.value.intervalQuality.quality != Quality.V }, { "Individual values should never have V quality." })
