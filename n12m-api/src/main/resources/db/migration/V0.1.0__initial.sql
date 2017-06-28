@@ -10,16 +10,41 @@ TO ${dbUserId};
 
 ALTER USER ${dbUserId} SET search_path TO ${schemaName};
 
+CREATE TABLE IF NOT EXISTS login (
+  id         SERIAL        NOT NULL,
+  username   VARCHAR(254)  NOT NULL,
+  email      VARCHAR(254)  NOT NULL,
+  name       VARCHAR(254),
+  pictureurl VARCHAR(254),
+  locale     VARCHAR(254),
+  familyname VARCHAR(254),
+  givenname  VARCHAR(254),
+  version    INT DEFAULT 0 NOT NULL,
+  CONSTRAINT user_pk PRIMARY KEY (id),
+  CONSTRAINT user_username_uk UNIQUE (username),
+  CONSTRAINT user_email_uk UNIQUE (email)
+);
+
+CREATE TABLE IF NOT EXISTS nmi (
+  id      SERIAL        NOT NULL,
+  login   INT           NOT NULL REFERENCES login (id),
+  nmi     VARCHAR(11)   NOT NULL,
+  label   VARCHAR(500),
+  version INT DEFAULT 0 NOT NULL,
+  CONSTRAINT nmi_pk PRIMARY KEY (id),
+  CONSTRAINT nmi_user_nmi_uk UNIQUE (login, nmi)
+);
+
 CREATE TABLE IF NOT EXISTS nmi_meter_register (
   id                       SERIAL        NOT NULL,
-  nmi                      VARCHAR(11)   NOT NULL,
+  nmi                      INT           NOT NULL REFERENCES nmi (id),
   meter_serial             VARCHAR(12)   NOT NULL,
   register_id              VARCHAR(10)   NOT NULL,
   nmi_suffix               VARCHAR(2)    NOT NULL,
   nmi_config               VARCHAR(240),
   mdm_data_stream_id       VARCHAR(2),
   uom                      VARCHAR(5)    NOT NULL,
-  interval_length          INTEGER       NOT NULL,
+  interval_length          INT           NOT NULL,
   next_scheduled_read_date DATE,
   version                  INT DEFAULT 0 NOT NULL,
   CONSTRAINT nmi_meter_register_pk PRIMARY KEY (id),
@@ -29,7 +54,7 @@ ALTER SEQUENCE nmi_meter_register_id_seq RESTART WITH 1000;
 
 CREATE TABLE IF NOT EXISTS interval_day (
   id                   SERIAL        NOT NULL,
-  nmi_meter_register   INTEGER       NOT NULL REFERENCES nmi_meter_register (id),
+  nmi_meter_register   INT           NOT NULL REFERENCES nmi_meter_register (id),
   interval_date        DATE          NOT NULL,
   quality              VARCHAR(1)    NOT NULL,
   method               VARCHAR(2),
@@ -44,13 +69,13 @@ CREATE TABLE IF NOT EXISTS interval_day (
 ALTER SEQUENCE interval_day_id_seq RESTART WITH 1000 INCREMENT BY 50;
 
 CREATE TABLE IF NOT EXISTS interval_value (
-  interval_day       INTEGER           NOT NULL REFERENCES interval_day (id),
-  interval           INTEGER           NOT NULL,
-  value              NUMERIC(10, 4)    NOT NULL,
-  quality            VARCHAR(1)        NOT NULL,
+  interval_day       INT            NOT NULL REFERENCES interval_day (id),
+  interval           INT            NOT NULL,
+  value              NUMERIC(10, 4) NOT NULL,
+  quality            VARCHAR(1)     NOT NULL,
   method             VARCHAR(2),
   reason_code        VARCHAR(3),
   reason_description VARCHAR(240),
-  version            INTEGER DEFAULT 0 NOT NULL,
+  version            INT DEFAULT 0  NOT NULL,
   CONSTRAINT interval_value_pk PRIMARY KEY (interval_day, interval)
 );
