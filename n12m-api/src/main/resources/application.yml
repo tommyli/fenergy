@@ -1,0 +1,57 @@
+server:
+#  contextPath: /
+  port: 8080
+
+spring:
+  jmx.enabled: false
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    driver: class-name=${n12m.db.driver}
+    url: ${n12m.db.url}
+    username: ${n12m.db.userid}
+    password: ${n12m.db.password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate.ddl-auto: none
+    generate-ddl: false
+
+logging:
+  file: nm12.api.log
+  path: /tmp/log/n12m
+
+n12m:
+  db:
+    driver: org.postgresql.Driver
+    schema: n12m
+    url: jdbc:postgresql://localhost/test
+    userid: n12mtest
+    password: password
+
+flyway:
+  driver: ${n12m.db.driver}
+  schemas: ${n12m.db.schema}
+  url: ${n12m.db.url}
+  user: ${n12m.db.userid}
+  password: ${n12m.db.password}
+  placeholder: true
+  placeholders.schemaName: ${n12m.db.schema}
+  placeholders.dbUserId: ${n12m.db.userid}
+
+google:
+  client:
+    clientId: ${n12m.oauth.client.id}
+    clientSecret: ${n12m.oauth.client.secret}
+    scope: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"]
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    tokenName: authorization_code
+#      tokenName: oauth_token
+#      authenticationScheme: query
+#      clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+
+security:
+  basic:
+    enabled: false
