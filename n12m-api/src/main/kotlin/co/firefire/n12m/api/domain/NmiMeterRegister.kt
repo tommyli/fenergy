@@ -15,6 +15,8 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.MapKey
 import javax.persistence.OneToMany
 import javax.persistence.OrderBy
@@ -24,7 +26,10 @@ import org.hibernate.annotations.Parameter as HbmParameter
 @Entity
 data class NmiMeterRegister(
 
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "login_nmi", referencedColumnName = "id", nullable = false)
         var loginNmi: LoginNmi = LoginNmi(),
+
         var meterSerial: String = "",
         var registerId: String = "",
         var nmiSuffix: String = "",
@@ -35,7 +40,7 @@ data class NmiMeterRegister(
         @Convert(converter = IntervalLengthConverter::class)
         var intervalLength: IntervalLength = IntervalLength.IL_30
 
-) {
+) : Comparable<NmiMeterRegister> {
 
     @Id
     @HbmGenericGenerator(
@@ -102,7 +107,8 @@ data class NmiMeterRegister(
         })
     }
 
-    override fun toString(): String {
-        return "NmiMeterRegister(id=$id, loginNmi='$loginNmi', meterSerial='$meterSerial', registerId='$registerId', nmiSuffix='$nmiSuffix')"
-    }
+    override fun compareTo(other: NmiMeterRegister) = compareValuesBy(this, other, { it.loginNmi }, { it.meterSerial }, { it.registerId }, { it.nmiSuffix })
+
+    override fun toString() = "NmiMeterRegister(id=$id, loginNmi='$loginNmi', meterSerial='$meterSerial', registerId='$registerId', nmiSuffix='$nmiSuffix')"
+
 }

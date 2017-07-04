@@ -4,15 +4,15 @@ package co.firefire.n12m.api.repository
 
 import java.time.LocalDateTime
 
-import javax.annotation.Resource
-
 import co.firefire.n12m.api.domain.IntervalDay
 import co.firefire.n12m.api.domain.IntervalLength
 import co.firefire.n12m.api.domain.IntervalQuality
 import co.firefire.n12m.api.domain.IntervalValue
+import co.firefire.n12m.api.domain.LoginNmi
 import co.firefire.n12m.api.domain.NmiMeterRegister
 import co.firefire.n12m.api.domain.Quality
 import co.firefire.n12m.api.domain.UnitOfMeasure
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
@@ -24,14 +24,19 @@ import static co.firefire.n12m.api.TestUtils.dts
 @SpringBootTest
 class NmiMeterRegisterRepositoryIntegrationSpec extends Specification {
 
-  @Resource
+  @Autowired
   NmiMeterRegisterRepository underTest
+
+  @Autowired
+  LoginNmiRepository loginNmiRepo
 
   def 'findByNmiAndMeterSerialAndRegisterIdAndNmiSuffix() returns correct results'() {
     when:
-    NmiMeterRegister actualResult = underTest.findByNmiAndMeterSerialAndRegisterIdAndNmiSuffix('6123456789', 'ABCD-12345', 'E1', 'E1')
+    LoginNmi loginNmi = loginNmiRepo.findByLoginUsernameAndNmi('tommy.li@firefire.co', '6123456789')
+    NmiMeterRegister actualResult = underTest.findByLoginNmiAndMeterSerialAndRegisterIdAndNmiSuffix(loginNmi, 'ABCD-12345', 'E1', 'E1')
 
     then:
+    actualResult.loginNmi.nmiMeterRegisters.contains(actualResult)
     actualResult.nmiConfig == 'E1E1'
     actualResult.mdmDataStreamId == null
     actualResult.uom == UnitOfMeasure.KWH
@@ -66,7 +71,8 @@ class NmiMeterRegisterRepositoryIntegrationSpec extends Specification {
 
   def 'New NmiMeterRegister saves correctly with associated IntervalDay and IntervalValue'() {
     given:
-    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(nmi: '6123456789', meterSerial: '123456', registerId: 'E1', nmiSuffix: 'E1', uom: UnitOfMeasure.KWH, intervalLength: IntervalLength.IL_30, nextScheduledReadDate: dt('2017-02-23'))
+    LoginNmi loginNmi = loginNmiRepo.findByLoginUsernameAndNmi('tommy.li@firefire.co', '6123456789')
+    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi: loginNmi, meterSerial: '123456', registerId: 'E1', nmiSuffix: 'E1', uom: UnitOfMeasure.KWH, intervalLength: IntervalLength.IL_30, nextScheduledReadDate: dt('2017-02-23'))
 
     when:
     IntervalQuality quality = new IntervalQuality(Quality.A)
@@ -84,7 +90,7 @@ class NmiMeterRegisterRepositoryIntegrationSpec extends Specification {
     IntervalDay actualDay20170102 = actualResult.getDay(dt('2017-01-02'))
 
     then:
-    actualResult.nmi == '6123456789'
+    actualResult.loginNmi == loginNmi
     actualDay20170101.nmiMeterRegister == actualResult
     actualDay20170102.nmiMeterRegister == actualResult
   }

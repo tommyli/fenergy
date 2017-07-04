@@ -2,6 +2,7 @@
 
 package co.firefire.n12m.api.service
 
+import co.firefire.n12m.api.domain.Login
 import co.firefire.n12m.api.domain.NmiMeterRegister
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
@@ -11,7 +12,13 @@ import static co.firefire.n12m.api.TestUtils.dt
 
 class Nem12ParserImplSpec extends Specification {
 
-  Nem12Parser underTest = new Nem12ParserImpl()
+  Login login = new Login(username: 'user')
+
+  Nem12Parser underTest
+
+  def setup() {
+    underTest = new Nem12ParserImpl(login)
+  }
 
   def 'Nem12ParserImpl parses valid NEM12 file correctly'() {
     given: 'NEM12 file'

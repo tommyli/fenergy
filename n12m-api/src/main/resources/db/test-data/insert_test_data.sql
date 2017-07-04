@@ -2,8 +2,6 @@
 
 INSERT INTO login (username, email, name, picture_url, locale, family_name, given_name)
 VALUES ('tommy.li@gmail.com', 'tommy.yli@gmail.com', 'Tom Li', NULL, NULL, 'Li', 'Tom');
-INSERT INTO nmi (nmi)
-VALUES ('6123456789');
 INSERT INTO login_nmi (login, nmi, label)
 VALUES (currval('login_id_seq'), '6123456789', 'Work');
 INSERT INTO nmi_meter_register (login_nmi, meter_serial, register_id, nmi_suffix, nmi_config, mdm_data_stream_id, uom, interval_length, next_scheduled_read_date)
