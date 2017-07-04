@@ -1,6 +1,8 @@
 // Tommy Li (tommy.li@firefire.co), 2017-02-20
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.domain
+
+import co.firefire.n12m.api.DomainException
 
 enum class IntervalLength(val minute: Int) {
 

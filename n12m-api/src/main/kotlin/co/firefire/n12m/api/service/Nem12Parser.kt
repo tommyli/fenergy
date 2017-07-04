@@ -1,7 +1,22 @@
 // Tommy Li (tommy.li@firefire.co), 2017-05-27
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.service
 
+import co.firefire.n12m.api.DEFAULT_DATE_TIME_FORMATTER
+import co.firefire.n12m.api.DomainException
+import co.firefire.n12m.api.NEM12_DELIMITER
+import co.firefire.n12m.api.domain.IntervalDay
+import co.firefire.n12m.api.domain.IntervalEvent
+import co.firefire.n12m.api.domain.IntervalLength
+import co.firefire.n12m.api.domain.IntervalQuality
+import co.firefire.n12m.api.domain.IntervalValue
+import co.firefire.n12m.api.domain.Login
+import co.firefire.n12m.api.domain.LoginNmi
+import co.firefire.n12m.api.domain.MINUTES_IN_DAY
+import co.firefire.n12m.api.domain.NmiMeterRegister
+import co.firefire.n12m.api.domain.Quality
+import co.firefire.n12m.api.domain.UnitOfMeasure
+import co.firefire.n12m.api.forEachNem12Line
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import java.io.InputStreamReader
@@ -9,7 +24,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
 
 interface Nem12Parser {
 
@@ -19,6 +33,7 @@ interface Nem12Parser {
 
 interface Nem12ParserContext {
 
+    fun getCurrentLogin(): Login
     fun getCurrentRecordType(): Nem12RecordType?
     fun updateCurrentRecordType(recordType: Nem12RecordType)
     fun getCurrentNmiMeterRegister(): NmiMeterRegister?
@@ -36,9 +51,6 @@ interface ErrorCollector {
 
 }
 
-private val NEM12_DELIMITER: Pattern = ",".toPattern()
-val DEFAULT_DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdHHmmss")
-
 enum class Nem12RecordId(val id: String) {
     ID_100("100"), ID_200("200"), ID_300("300"), ID_400("400"), ID_500("500"), ID_900("600");
 }
@@ -52,12 +64,12 @@ sealed class Nem12RecordType(val nem12RecordId: Nem12RecordId, val nextValidReco
     companion object {
         operator fun invoke(nem12RecordId: Nem12RecordId): Nem12RecordType {
             return when (nem12RecordId) {
-                Nem12RecordId.ID_100 -> Nem12RecordType.Record100
-                Nem12RecordId.ID_200 -> Nem12RecordType.Record200
-                Nem12RecordId.ID_300 -> Nem12RecordType.Record300
-                Nem12RecordId.ID_400 -> Nem12RecordType.Record400
-                Nem12RecordId.ID_500 -> Nem12RecordType.Record500
-                Nem12RecordId.ID_900 -> Nem12RecordType.Record900
+                Nem12RecordId.ID_100 -> Record100
+                Nem12RecordId.ID_200 -> Record200
+                Nem12RecordId.ID_300 -> Record300
+                Nem12RecordId.ID_400 -> Record400
+                Nem12RecordId.ID_500 -> Record500
+                Nem12RecordId.ID_900 -> Record900
             }
         }
     }
@@ -107,7 +119,9 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
                     val intervalLength = parseMandatory("intervalLength", 8, lineNumber, lineItems, { IntervalLength.fromMinute(it.toInt()) })
                     val nextScheduledReadDate = parseOptional("nextScheduledReadDate", 9, lineNumber, lineItems, { LocalDate.parse(it, DateTimeFormatter.BASIC_ISO_DATE) })
 
-                    val nmiMeterRegister = NmiMeterRegister(nmi, meterSerial, registerId, nmiSuffix, uom, intervalLength)
+                    val currentLogin = parsingContext.getCurrentLogin()
+                    val loginNmi = LoginNmi(currentLogin, nmi)
+                    val nmiMeterRegister = NmiMeterRegister(loginNmi, meterSerial, registerId, nmiSuffix, uom, intervalLength)
                     nmiMeterRegister.nmiConfig = nmiConfig
                     nmiMeterRegister.mdmDataStreamId = mdmDataStreamId
                     nmiMeterRegister.nextScheduledReadDate = nextScheduledReadDate
@@ -208,35 +222,13 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
     }
 }
 
-class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
+class Nem12ParserImpl(var login: Login) : Nem12Parser, Nem12ParserContext, ErrorCollector {
 
     var currRecordType: Nem12RecordType? = null
     var currNmiMeterRegister: NmiMeterRegister? = null
     var currIntervalDay: IntervalDay? = null
     var result: MutableList<NmiMeterRegister> = arrayListOf()
     var errors: MutableList<String> = arrayListOf()
-
-    fun InputStreamReader.forEachNem12Line(delimiter: Pattern = NEM12_DELIMITER, block: (nem12Line: Nem12Line) -> Unit, finalizer: () -> Unit) {
-        try {
-            this.use { inputStreamReader: InputStreamReader ->
-                var lineNumber: Int = 1
-
-                val distinctRecordTypes = mutableSetOf<Nem12RecordType>()
-                inputStreamReader.forEachLine { line: String ->
-                    val items = line.split(delimiter)
-                    val recordType = Nem12RecordType(Nem12RecordId.valueOf("ID_${items[0]}"))
-                    val nem12Line = Nem12Line(lineNumber++, recordType, items)
-                    distinctRecordTypes.add(recordType)
-                    block(nem12Line)
-                }
-                if (distinctRecordTypes.none { it == Nem12RecordType.Record900 }) {
-                    finalizer()
-                }
-            }
-        } catch (e: Exception) {
-            throw DomainException("Error splitting file contents using delimiter [$delimiter]: $e", e)
-        }
-    }
 
     override fun parseNem12Resource(resource: Resource): Collection<NmiMeterRegister> {
         try {
@@ -251,6 +243,10 @@ class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
         } else {
             return result
         }
+    }
+
+    override fun getCurrentLogin(): Login {
+        return login
     }
 
     override fun getCurrentRecordType(): Nem12RecordType? {
@@ -280,7 +276,7 @@ class Nem12ParserImpl : Nem12Parser, Nem12ParserContext, ErrorCollector {
     override fun mergeNmiMeterRegisterResult() {
         val currNmiMeterRegister = currNmiMeterRegister
         if (currNmiMeterRegister != null) {
-            val existingNmiMeterRegister = result.find { it.nmi == currNmiMeterRegister.nmi && it.meterSerial == currNmiMeterRegister.meterSerial && it.registerId == currNmiMeterRegister.registerId && it.nmiSuffix == currNmiMeterRegister.nmiSuffix }
+            val existingNmiMeterRegister = result.find { it.loginNmi == currNmiMeterRegister.loginNmi && it.meterSerial == currNmiMeterRegister.meterSerial && it.registerId == currNmiMeterRegister.registerId && it.nmiSuffix == currNmiMeterRegister.nmiSuffix }
 
             if (existingNmiMeterRegister != null) {
                 existingNmiMeterRegister.mergeIntervalDays(currNmiMeterRegister.intervalDays.values)

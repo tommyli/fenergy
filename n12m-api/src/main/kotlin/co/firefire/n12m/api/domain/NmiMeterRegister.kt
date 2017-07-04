@@ -1,7 +1,8 @@
 // Tommy Li (tommy.li@firefire.co), 2017-02-20
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.domain
 
+import co.firefire.n12m.api.repository.IntervalLengthConverter
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,7 +24,7 @@ import org.hibernate.annotations.Parameter as HbmParameter
 @Entity
 data class NmiMeterRegister(
 
-        var nmi: String = "",
+        var loginNmi: LoginNmi = LoginNmi(),
         var meterSerial: String = "",
         var registerId: String = "",
         var nmiSuffix: String = "",
@@ -102,6 +103,6 @@ data class NmiMeterRegister(
     }
 
     override fun toString(): String {
-        return "NmiMeterRegister(id=$id, nmi='$nmi', meterSerial='$meterSerial', registerId='$registerId', nmiSuffix='$nmiSuffix')"
+        return "NmiMeterRegister(id=$id, loginNmi='$loginNmi', meterSerial='$meterSerial', registerId='$registerId', nmiSuffix='$nmiSuffix')"
     }
 }

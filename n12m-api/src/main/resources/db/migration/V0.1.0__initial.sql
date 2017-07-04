@@ -11,21 +11,21 @@ TO ${dbUserId};
 ALTER USER ${dbUserId} SET search_path TO ${schemaName};
 
 CREATE TABLE IF NOT EXISTS login (
-  id         SERIAL        NOT NULL,
-  username   VARCHAR(254)  NOT NULL,
-  email      VARCHAR(254)  NOT NULL,
-  name       VARCHAR(254),
-  pictureurl VARCHAR(254),
-  locale     VARCHAR(254),
-  familyname VARCHAR(254),
-  givenname  VARCHAR(254),
-  version    INT DEFAULT 0 NOT NULL,
-  CONSTRAINT user_pk PRIMARY KEY (id),
-  CONSTRAINT user_username_uk UNIQUE (username),
-  CONSTRAINT user_email_uk UNIQUE (email)
+  id          SERIAL        NOT NULL,
+  username    VARCHAR(254)  NOT NULL,
+  email       VARCHAR(254)  NOT NULL,
+  name        VARCHAR(254),
+  picture_url VARCHAR(254),
+  locale      VARCHAR(254),
+  family_name VARCHAR(254),
+  given_name  VARCHAR(254),
+  version     INT DEFAULT 0 NOT NULL,
+  CONSTRAINT login_pk PRIMARY KEY (id),
+  CONSTRAINT login_username_uk UNIQUE (username),
+  CONSTRAINT login_email_uk UNIQUE (email)
 );
 
-CREATE TABLE IF NOT EXISTS nmi (
+CREATE TABLE IF NOT EXISTS login_nmi (
   id      SERIAL        NOT NULL,
   login   INT           NOT NULL REFERENCES login (id),
   nmi     VARCHAR(11)   NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS nmi (
 
 CREATE TABLE IF NOT EXISTS nmi_meter_register (
   id                       SERIAL        NOT NULL,
-  nmi                      INT           NOT NULL REFERENCES nmi (id),
+  login_nmi                INT           NOT NULL REFERENCES login_nmi (id),
   meter_serial             VARCHAR(12)   NOT NULL,
   register_id              VARCHAR(10)   NOT NULL,
   nmi_suffix               VARCHAR(2)    NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS nmi_meter_register (
   next_scheduled_read_date DATE,
   version                  INT DEFAULT 0 NOT NULL,
   CONSTRAINT nmi_meter_register_pk PRIMARY KEY (id),
-  CONSTRAINT nmi_meter_register_uk UNIQUE (nmi, meter_serial, register_id, nmi_suffix)
+  CONSTRAINT nmi_meter_register_uk UNIQUE (login_nmi, meter_serial, register_id, nmi_suffix)
 );
 ALTER SEQUENCE nmi_meter_register_id_seq RESTART WITH 1000;
 

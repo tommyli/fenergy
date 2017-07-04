@@ -1,7 +1,8 @@
 // Tommy Li (tommy.li@firefire.co), 2017-03-10
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.domain
 
+import co.firefire.n12m.api.sumByBigDecimal
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDate
@@ -23,10 +24,6 @@ import org.hibernate.annotations.Parameter as HbmParameter
 import javax.persistence.Transient as JpaTransient
 
 val MINUTES_IN_DAY: Int = Duration.ofDays(1).toMinutes().toInt()
-
-inline fun <T> Iterable<T>.sumByBigDecimal(selector: (T) -> BigDecimal): BigDecimal {
-    return this.fold(BigDecimal.ZERO) { acc, t -> acc + selector(t) }
-}
 
 @Entity
 data class IntervalDay(

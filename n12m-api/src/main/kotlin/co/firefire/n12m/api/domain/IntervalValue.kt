@@ -1,6 +1,6 @@
 // Tommy Li (tommy.li@firefire.co), 2017-06-03
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.domain
 
 import java.io.Serializable
 import java.math.BigDecimal

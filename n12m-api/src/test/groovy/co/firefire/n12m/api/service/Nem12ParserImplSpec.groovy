@@ -1,7 +1,8 @@
 // Tommy Li (tommy.li@firefire.co), 2017-05-28
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.service
 
+import co.firefire.n12m.api.domain.NmiMeterRegister
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import spock.lang.Specification

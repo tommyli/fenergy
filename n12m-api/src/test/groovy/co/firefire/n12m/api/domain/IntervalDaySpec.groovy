@@ -1,6 +1,6 @@
 // Tommy Li (tommy.li@firefire.co), 2017-03-15
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.domain
 
 import spock.lang.Specification
 

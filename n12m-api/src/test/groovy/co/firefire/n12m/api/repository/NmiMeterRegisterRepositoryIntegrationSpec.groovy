@@ -1,11 +1,18 @@
 // Tommy Li (tommy.li@firefire.co), 2017-02-20
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.repository
 
 import java.time.LocalDateTime
 
 import javax.annotation.Resource
 
+import co.firefire.n12m.api.domain.IntervalDay
+import co.firefire.n12m.api.domain.IntervalLength
+import co.firefire.n12m.api.domain.IntervalQuality
+import co.firefire.n12m.api.domain.IntervalValue
+import co.firefire.n12m.api.domain.NmiMeterRegister
+import co.firefire.n12m.api.domain.Quality
+import co.firefire.n12m.api.domain.UnitOfMeasure
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification

@@ -1,7 +1,8 @@
 // Tommy Li (tommy.li@firefire.co), 2017-05-20
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.repository
 
+import co.firefire.n12m.api.domain.IntervalLength
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

@@ -1,9 +1,9 @@
 // Tommy Li (tommy.li@firefire.co), 2017-06-24
 
-package co.firefire.n12m.api.projections
+package co.firefire.n12m.api.rest.projection
 
-import co.firefire.n12m.api.IntervalDay
-import co.firefire.n12m.api.IntervalQuality
+import co.firefire.n12m.api.domain.IntervalDay
+import co.firefire.n12m.api.domain.IntervalQuality
 import org.springframework.data.rest.core.config.Projection
 import java.math.BigDecimal
 import java.time.LocalDate

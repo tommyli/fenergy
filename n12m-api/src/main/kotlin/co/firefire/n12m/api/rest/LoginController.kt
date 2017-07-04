@@ -1,6 +1,6 @@
 // Tommy Li (tommy.li@firefire.co), 2017-06-29
 
-package co.firefire.n12m.api
+package co.firefire.n12m.api.rest
 
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.provider.OAuth2Authentication
