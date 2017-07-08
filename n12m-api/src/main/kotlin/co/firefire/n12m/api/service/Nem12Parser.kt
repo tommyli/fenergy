@@ -42,6 +42,7 @@ interface Nem12ParserContext {
     fun updateCurrentIntervalDay(intervalDay: IntervalDay)
     fun mergeNmiMeterRegisterResult()
     fun mergeIntervalDayResult()
+    fun getProcessedResults(): MutableList<NmiMeterRegister>
 
 }
 
@@ -121,10 +122,15 @@ data class Nem12Line(val lineNumber: Int, val recordType: Nem12RecordType, val l
 
                     val currentLogin = parsingContext.getCurrentLogin()
                     val loginNmi = LoginNmi(currentLogin, nmi)
-                    val nmiMeterRegister = NmiMeterRegister(loginNmi, meterSerial, registerId, nmiSuffix, uom, intervalLength)
+                    val existingNmr = parsingContext.getProcessedResults().find { it.loginNmi == loginNmi && it.meterSerial == meterSerial && it.registerId == registerId && it.nmiSuffix == nmiSuffix }
+                    val nmiMeterRegister = existingNmr ?: NmiMeterRegister(loginNmi, meterSerial, registerId, nmiSuffix)
+                    loginNmi.addNmiMeterRegister(nmiMeterRegister)
+
                     nmiMeterRegister.nmiConfig = nmiConfig
                     nmiMeterRegister.mdmDataStreamId = mdmDataStreamId
                     nmiMeterRegister.nextScheduledReadDate = nextScheduledReadDate
+                    nmiMeterRegister.uom = uom
+                    nmiMeterRegister.intervalLength = intervalLength
 
                     parsingContext.updateCurrentNmiMeterRegister(nmiMeterRegister)
                 }
@@ -233,7 +239,10 @@ class Nem12ParserImpl(var login: Login) : Nem12Parser, Nem12ParserContext, Error
     override fun parseNem12Resource(resource: Resource): Collection<NmiMeterRegister> {
         try {
             InputStreamReader(resource.inputStream).forEachNem12Line(
-                    NEM12_DELIMITER, { it.handleLine(this, this) }, { mergeIntervalDayResult(); mergeNmiMeterRegisterResult() })
+                    NEM12_DELIMITER,
+                    { it.handleLine(this, this) },
+                    { mergeIntervalDayResult(); mergeNmiMeterRegisterResult() }
+            )
         } catch (e: Exception) {
             errors.add("Error reading file ${resource.filename}: $e")
         }
@@ -283,6 +292,7 @@ class Nem12ParserImpl(var login: Login) : Nem12Parser, Nem12ParserContext, Error
             } else {
                 result.add(currNmiMeterRegister)
             }
+            this.currNmiMeterRegister = null
         }
     }
 
@@ -293,10 +303,15 @@ class Nem12ParserImpl(var login: Login) : Nem12Parser, Nem12ParserContext, Error
         if (currNmiMeterRegister != null && currIntervalDay != null) {
             currIntervalDay.applyIntervalEvents()
             currNmiMeterRegister.mergeIntervalDay(currIntervalDay)
+            this.currIntervalDay = null
         }
     }
 
     override fun addError(error: String) {
         errors.add(error)
+    }
+
+    override fun getProcessedResults(): MutableList<NmiMeterRegister> {
+        return result
     }
 }

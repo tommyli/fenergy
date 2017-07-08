@@ -25,12 +25,16 @@ class Nem12ParserImplSpec extends Specification {
     Resource nem12FileResource = new ClassPathResource('6408091979_20141126_20161126_20161127103000_UNITEDENERGY.csv')
 
     when:
-    Collection<NmiMeterRegister> actualResult = underTest.parseNem12Resource(nem12FileResource)
+    Collection<NmiMeterRegister> firstParseResult = underTest.parseNem12Resource(nem12FileResource)
+    Collection<NmiMeterRegister> actualResult = underTest.parseNem12Resource(nem12FileResource)  // parsing a second time gives same results
     NmiMeterRegister e1 = actualResult.find { it.nmiSuffix == 'E1' }
     NmiMeterRegister b1 = actualResult.find { it.nmiSuffix == 'B1' }
 
     then:
+    actualResult == firstParseResult
     actualResult.size() == 2
+    e1.intervalDays.every { k, v -> v.nmiMeterRegister.is(e1) }
+    b1.intervalDays.every { k, v -> v.nmiMeterRegister.is(b1) }
 
     e1.intervalDays.collectEntries { k, v -> [(k): v.intervalValues.values().sum { it.value }] } == [
       (dt('2014-11-26')): 7.427,

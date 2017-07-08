@@ -11,6 +11,7 @@ import java.util.*
 import javax.persistence.CascadeType
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -61,7 +62,7 @@ data class IntervalDay(
     @Transient
     var intervalEvents: MutableMap<IntRange, IntervalEvent> = mutableMapOf()
 
-    @OneToMany(mappedBy = "id.intervalDay", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+    @OneToMany(mappedBy = "id.intervalDay", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true, fetch = FetchType.EAGER)
     @MapKey(name = "id.interval")
     @OrderBy("id.interval")
     var intervalValues: SortedMap<Int, IntervalValue> = TreeMap()
@@ -81,6 +82,23 @@ data class IntervalDay(
         }
     }
 
+    fun addIntervalValue(newIntervalValue: IntervalValue) {
+        newIntervalValue.id = IntervalKey(this, newIntervalValue.interval)
+        intervalValues.put(newIntervalValue.interval, newIntervalValue)
+    }
+
+    fun replaceIntervalValues(newIntervalValues: Map<Int, IntervalValue>) {
+        newIntervalValues.forEach { interval: Int, newIntervalValue: IntervalValue ->
+            val existingIntervalValue = intervalValues.get(interval)
+            if (existingIntervalValue == null) {
+                addIntervalValue(newIntervalValue)
+            } else {
+                existingIntervalValue.value = newIntervalValue.value
+                existingIntervalValue.intervalQuality = newIntervalValue.intervalQuality
+            }
+        }
+    }
+
     fun mergeNewIntervalValues(newIntervalValues: Map<Int, IntervalValue>, newUpdateDateTime: LocalDateTime?, newMsatsLoadDateTime: LocalDateTime?) {
         val existingDateTime = updateDateTime ?: msatsLoadDateTime ?: LocalDateTime.now()
         val newDateTime = newUpdateDateTime ?: newMsatsLoadDateTime ?: LocalDateTime.now()
@@ -88,18 +106,19 @@ data class IntervalDay(
         validateIntervalValueQuality(intervalValues)
         validateIntervalValueQuality(newIntervalValues)
 
-        newIntervalValues.forEach({ newInterval: Int, newIntervalValue: IntervalValue ->
+        newIntervalValues.forEach { newInterval: Int, newIntervalValue: IntervalValue ->
             intervalValues.merge(newInterval, newIntervalValue, { existing: IntervalValue, new: IntervalValue ->
                 val existingQuality = TimestampedQuality(existing.intervalQuality.quality, existingDateTime)
                 val newQuality = TimestampedQuality(new.intervalQuality.quality, newDateTime)
                 if (newQuality >= existingQuality) {
-                    new.id = IntervalKey(this, newInterval)
-                    new
+                    existing.value = new.value
+                    existing.intervalQuality = new.intervalQuality
+                    existing
                 } else {
                     existing
                 }
             })
-        })
+        }
     }
 
     fun appendIntervalEvent(intervalEvent: IntervalEvent) {

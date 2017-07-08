@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS login_nmi (
   nmi     VARCHAR(11)   NOT NULL,
   label   VARCHAR(500),
   version INT DEFAULT 0 NOT NULL,
-  CONSTRAINT nmi_pk PRIMARY KEY (id),
-  CONSTRAINT nmi_user_nmi_uk UNIQUE (login, nmi)
+  CONSTRAINT login_nmi_pk PRIMARY KEY (id),
+  CONSTRAINT login_nmi_uk UNIQUE (login, nmi)
 );
 
 CREATE TABLE IF NOT EXISTS nmi_meter_register (
@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS interval_day (
   msats_load_date_time TIMESTAMP,
   version              INT DEFAULT 0 NOT NULL,
   CONSTRAINT interval_day_pk PRIMARY KEY (id),
-  CONSTRAINT interval_day_uk UNIQUE (nmi_meter_register, interval_date)
+  CONSTRAINT interval_day_uk UNIQUE (nmi_meter_register, interval_date) DEFERRABLE INITIALLY DEFERRED
+  --   CONSTRAINT interval_day_uk UNIQUE (nmi_meter_register, interval_date)
 );
 ALTER SEQUENCE interval_day_id_seq RESTART WITH 1000 INCREMENT BY 50;
 

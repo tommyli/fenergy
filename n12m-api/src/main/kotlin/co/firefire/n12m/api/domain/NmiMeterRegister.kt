@@ -32,13 +32,7 @@ data class NmiMeterRegister(
 
         var meterSerial: String = "",
         var registerId: String = "",
-        var nmiSuffix: String = "",
-
-        @Enumerated(EnumType.STRING)
-        var uom: UnitOfMeasure = UnitOfMeasure.KWH,
-
-        @Convert(converter = IntervalLengthConverter::class)
-        var intervalLength: IntervalLength = IntervalLength.IL_30
+        var nmiSuffix: String = ""
 
 ) : Comparable<NmiMeterRegister> {
 
@@ -59,7 +53,13 @@ data class NmiMeterRegister(
 
     var nmiConfig: String? = null
     var mdmDataStreamId: String? = null
-    var nextScheduledReadDate: LocalDate? = LocalDate.MIN
+    var nextScheduledReadDate: LocalDate? = null
+
+    @Enumerated(EnumType.STRING)
+    var uom: UnitOfMeasure = UnitOfMeasure.KWH
+
+    @Convert(converter = IntervalLengthConverter::class)
+    var intervalLength: IntervalLength = IntervalLength.IL_30
 
     @OneToMany(mappedBy = "nmiMeterRegister", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
     @MapKey(name = "intervalDate")
@@ -98,8 +98,8 @@ data class NmiMeterRegister(
                 val newQuality = TimestampedQuality(new.intervalQuality.quality, newIntervalDayDateTime)
 
                 if (newQuality >= existingQuality) {
-                    new.nmiMeterRegister = this
-                    new
+                    existing.replaceIntervalValues(new.intervalValues)
+                    existing
                 } else {
                     existing
                 }

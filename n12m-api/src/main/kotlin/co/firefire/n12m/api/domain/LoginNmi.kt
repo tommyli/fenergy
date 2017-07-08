@@ -45,6 +45,20 @@ data class LoginNmi(
     @OrderBy("meterSerial, registerId, nmiSuffix")
     var nmiMeterRegisters: SortedSet<NmiMeterRegister> = TreeSet()
 
+    fun addNmiMeterRegister(nmiMeterRegister: NmiMeterRegister) {
+        nmiMeterRegister.loginNmi = this
+        nmiMeterRegisters.add(nmiMeterRegister)
+    }
+
+    fun mergeNmiMeterRegister(nmr: NmiMeterRegister) {
+        val existing: NmiMeterRegister? = nmiMeterRegisters.find { it.loginNmi == nmr.loginNmi && it.meterSerial == nmr.meterSerial && it.registerId == nmr.registerId && it.nmiSuffix == nmr.nmiSuffix }
+        if (existing == null) {
+            addNmiMeterRegister(nmr)
+        } else {
+            existing.mergeIntervalDays(nmr.intervalDays.values)
+        }
+    }
+
     override fun compareTo(other: LoginNmi) = compareValuesBy(this, other, { it.login }, { it.nmi })
 
     override fun toString() = "LoginNmi(login=$login, nmi='$nmi', id=$id, label=$label)"

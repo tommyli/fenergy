@@ -4,7 +4,6 @@ package co.firefire.n12m.api.domain
 
 import java.io.Serializable
 import java.math.BigDecimal
-import javax.persistence.CascadeType
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.EmbeddedId
@@ -40,7 +39,7 @@ data class IntervalValue(
 @Embeddable
 data class IntervalKey(
 
-        @ManyToOne(optional = false, cascade = arrayOf(CascadeType.ALL))
+        @ManyToOne(optional = false)
         @JoinColumn(name = "interval_day", referencedColumnName = "id", nullable = false)
         var intervalDay: IntervalDay = IntervalDay(),
 

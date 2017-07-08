@@ -3,13 +3,11 @@
 package co.firefire.n12m.api.service
 
 import co.firefire.n12m.api.domain.IntervalDay
-import co.firefire.n12m.api.domain.IntervalLength
 import co.firefire.n12m.api.domain.IntervalQuality
 import co.firefire.n12m.api.domain.Login
 import co.firefire.n12m.api.domain.LoginNmi
 import co.firefire.n12m.api.domain.NmiMeterRegister
 import co.firefire.n12m.api.domain.Quality
-import co.firefire.n12m.api.domain.UnitOfMeasure
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -28,13 +26,14 @@ class Nem12LineSpec extends Specification {
 
   def setup() {
     mockParserContext.getCurrentLogin() >> login
+    mockParserContext.getProcessedResults() >> []
   }
 
   def 'Valid 200 record is parsed correctly'() {
     given:
     underTest = new Nem12Line(2, new Nem12RecordType.Record200(), ['200', '6408091979', 'E1', 'E1', 'E1', '', '1236594', 'KWH', '30', ''])
     def loginNmi = new LoginNmi(login, '6408091979')
-    def expNmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1', UnitOfMeasure.KWH, IntervalLength.IL_30)
+    def expNmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1')
 
     when:
     underTest.handleLine(mockParserContext, mockErrorCollector)
@@ -75,7 +74,7 @@ class Nem12LineSpec extends Specification {
   def 'Valid 300 record is parsed correctly'() {
     given:
     def loginNmi = new LoginNmi(login, '6408091979')
-    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1', UnitOfMeasure.KWH, IntervalLength.IL_30)
+    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1')
     mockParserContext.getCurrentNmiMeterRegister() >> nmiMeterRegister
     underTest = new Nem12Line(3, new Nem12RecordType.Record300(), ['300', '20141126'] + validValues + ['A', '', '', '20141127021242', ''])
     def expIntervalDay = new IntervalDay(nmiMeterRegister, dt('2014-11-26'), new IntervalQuality(Quality.A))
@@ -91,7 +90,7 @@ class Nem12LineSpec extends Specification {
   def 'Errors in 300 record are handled correctly'() {
     given:
     def loginNmi = new LoginNmi(login, '6408091979')
-    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1', UnitOfMeasure.KWH, IntervalLength.IL_30)
+    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, '1236594', 'E1', 'E1')
     underTest = new Nem12Line(3, new Nem12RecordType.Record300(), lineItems)
 
     when:
