@@ -3,13 +3,11 @@
 package co.firefire.n12m.api.repository
 
 import co.firefire.n12m.api.domain.IntervalDay
-import co.firefire.n12m.api.domain.IntervalLength
 import co.firefire.n12m.api.domain.IntervalQuality
 import co.firefire.n12m.api.domain.Login
 import co.firefire.n12m.api.domain.LoginNmi
 import co.firefire.n12m.api.domain.NmiMeterRegister
 import co.firefire.n12m.api.domain.Quality
-import co.firefire.n12m.api.domain.UnitOfMeasure
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Commit
@@ -45,7 +43,7 @@ class LoginNmiRepositoryIntegrationSpec extends Specification {
     Login login = loginRepo.findByUsername('tommy.li@firefire.co')
     LoginNmi loginNmi = new LoginNmi(login, '4123456789')
     loginNmi.label = 'test label'
-    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, 'test serial', '1', 'E1', UnitOfMeasure.KWH, IntervalLength.IL_30)
+    NmiMeterRegister nmiMeterRegister = new NmiMeterRegister(loginNmi, 'test serial', '1', 'E1')
     IntervalDay intervalDay = new IntervalDay(nmiMeterRegister, dt('2017-02-02'), new IntervalQuality(Quality.A))
     nmiMeterRegister.mergeIntervalDay(intervalDay)
     loginNmi.addNmiMeterRegister(nmiMeterRegister)
