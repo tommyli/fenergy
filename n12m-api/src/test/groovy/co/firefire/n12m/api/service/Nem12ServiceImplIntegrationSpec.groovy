@@ -12,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
-import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
-@Commit
 @Transactional
 @SpringBootTest
 class Nem12ServiceImplIntegrationSpec extends Specification {

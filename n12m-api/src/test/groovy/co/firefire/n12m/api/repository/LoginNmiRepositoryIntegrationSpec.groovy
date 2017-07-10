@@ -10,13 +10,11 @@ import co.firefire.n12m.api.domain.NmiMeterRegister
 import co.firefire.n12m.api.domain.Quality
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
 import static co.firefire.n12m.api.TestUtils.dt
 
-@Commit
 @Transactional
 @SpringBootTest
 class LoginNmiRepositoryIntegrationSpec extends Specification {

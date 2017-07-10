@@ -1,0 +1,79 @@
+description = "Fenergy Web Application Server"
+
+buildscript {
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:+")
+    classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+  }
+}
+
+group "co.firefire.fenergy"
+
+apply plugin: 'kotlin'
+apply plugin: 'groovy'
+apply plugin: 'com.google.cloud.tools.appengine'
+apply plugin: 'org.springframework.boot'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile("org.springframework.boot:spring-boot-autoconfigure")
+  compile("org.springframework.boot:spring-boot-starter-actuator")
+  compile("org.springframework.boot:spring-boot-starter-cache")
+  compile("org.springframework.boot:spring-boot-starter-logging")
+  compile("org.springframework.boot:spring-boot-starter-groovy-templates")
+  compile("org.springframework.boot:spring-boot-starter-mail")
+  compile("org.springframework.boot:spring-boot-starter-security")
+  compile("org.springframework.boot:spring-boot-starter-tomcat")
+  compile("org.springframework.boot:spring-boot-starter-web")
+  compile("org.springframework.security.oauth:spring-security-oauth2")
+  compile("org.codehaus.groovy:groovy")
+  compile("org.jetbrains.kotlin:kotlin-stdlib")
+
+  compile("org.webjars:jquery:+")
+  compile("org.webjars:js-cookie:+")
+
+  testCompile("org.springframework.boot:spring-boot-test")
+  testCompile("org.springframework:spring-test")
+  testCompile("org.spockframework:spock-core:$spockVersion")
+  testCompile("org.spockframework:spock-spring:$spockVersion")
+}
+
+def sysProps = [
+  'logging.file': project.property('fenergy.logging.file'),
+  'logging.path': project.property('fenergy.logging.path'),
+]
+
+springBoot {
+  executable = true
+}
+
+bootRun {
+  jvmArgs = ['-Dspring.output.ansi.enabled=always']
+  systemProperties = sysProps
+}
+
+[bootRun, test].each { task ->
+  configure(task) {
+    systemProperties = sysProps
+  }
+}
+
+appengine {
+  deploy {
+    stopPreviousVersion = true
+    promote = true
+  }
+}
+
+test {
+  testLogging {
+    events 'passed', 'skipped', 'failed', 'standardError'
+    minGranularity 2
+    maxGranularity 2
+  }
+}
