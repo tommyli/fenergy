@@ -16,24 +16,30 @@ class LoginController {
         var log = LoggerFactory.getLogger(this::class.java)
     }
 
-    @RequestMapping("/login/current")
-    fun login(principal: Principal?): Principal? {
-        log.info("In login: ${principal}")
-        return principal
-    }
-
-    @GetMapping("/user")
-    fun user(principal: Principal?): Map<String, String> {
+    @RequestMapping("/currentlogin")
+    fun currentlogin(principal: Principal?): Map<String, String> {
         val defaultResult = mapOf("name" to (principal?.name ?: ""))
         return if (principal is OAuth2Authentication) {
             val details = principal.userAuthentication.details
             if (details is Map<*, *>) {
-                defaultResult.plus("email" to details["email"] as String)
+                defaultResult.plus(mapOf(
+                        "email" to details["email"] as String,
+                        "profileUrl" to details["profile"] as String,
+                        "pictureUrl" to details["picture"] as String,
+                        "locale" to details["locale"] as String,
+                        "familyName" to details["family_name"] as String,
+                        "givenName" to details["given_name"] as String
+                ))
             } else {
                 defaultResult
             }
         } else {
             defaultResult
         }
+    }
+
+    @GetMapping("/user")
+    fun user(principal: Principal?): Map<String, String> {
+        return currentlogin(principal)
     }
 }
