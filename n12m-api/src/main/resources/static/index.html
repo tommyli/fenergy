@@ -53,12 +53,15 @@
             <li><a id="contact-link" href="#">Contact</a></li>
           </ul>
           <div class="navbar-form navbar-right">
-            <div id="sign-in-google" class="hidden">
+            <span id="span-profile-img" class="hidden" style="padding-right: 5px">
+              <img id="profile-img" src="" class="img-circle" alt="" width="33" height="33">
+            </span>
+            <span id="sign-out" class="hidden">
+              <a id="sign-out-button" href="#" class="btn btn-info"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
+            </span>
+            <span id="sign-in-google" class="hidden">
               <a id="sign-in-google-link" class="btn btn-block btn-social btn-google" href="/login/google"><i class="fa fa-google"></i>Sign in with Google</a>
-            </div>
-            <div id="sign-out" class="hidden">
-              <a id="sign-out-link" href="#">Logout</a>
-            </div>
+            </span>
           </div>
         </div><!--/.nav-collapse -->
 
@@ -91,13 +94,17 @@
           .done(function (data) {
             $("#sign-in-google").addClass('hidden');
             $("#sign-out").removeClass('hidden');
+
+            $("#profile-img").attr("src", data.pictureUrl);
+            $("#span-profile-img").removeClass('hidden');
           })
           .fail(function () {
             $("#sign-in-google").removeClass('hidden');
             $("#sign-out").addClass('hidden');
+            $("#span-profile-img").addClass('hidden');
           });
 
-        $("#sign-out-link").click(function () {
+        $("#sign-out-button").click(function () {
           $.post("/logout")
             .done(function () {
               window.location.replace("/");
