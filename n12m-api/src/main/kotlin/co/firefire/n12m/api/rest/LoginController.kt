@@ -18,28 +18,31 @@ class LoginController {
 
     @RequestMapping("/currentlogin")
     fun currentlogin(principal: Principal?): Map<String, String> {
-        val defaultResult = mapOf("name" to (principal?.name ?: ""))
+        return parsePrincipal(principal)
+    }
+
+    @GetMapping("/user")
+    fun user(principal: Principal?): Map<String, String> {
+        return currentlogin(principal)
+    }
+
+    private fun parsePrincipal(principal: Principal?): Map<String, String> {
+        val result = mapOf("name" to (principal?.name ?: ""))
         return if (principal is OAuth2Authentication) {
             val details = principal.userAuthentication.details
             if (details is Map<*, *>) {
-                defaultResult.plus(mapOf(
+                result.plus(mapOf(
                         "email" to details["email"] as String,
-                        "profileUrl" to details["profile"] as String,
                         "pictureUrl" to details["picture"] as String,
                         "locale" to details["locale"] as String,
                         "familyName" to details["family_name"] as String,
                         "givenName" to details["given_name"] as String
                 ))
             } else {
-                defaultResult
+                result
             }
         } else {
-            defaultResult
+            result
         }
-    }
-
-    @GetMapping("/user")
-    fun user(principal: Principal?): Map<String, String> {
-        return currentlogin(principal)
     }
 }
