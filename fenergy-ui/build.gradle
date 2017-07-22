@@ -1,8 +1,0 @@
-description = "Fenergy Web UI"
-
-group "co.firefire.fenergy"
-
-repositories {
-  mavenLocal()
-  mavenCentral()
-}

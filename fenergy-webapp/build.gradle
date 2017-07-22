@@ -2,18 +2,21 @@ description = "Fenergy Web Application Server"
 
 buildscript {
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
     classpath("org.springframework.boot:spring-boot-gradle-plugin:+")
-    classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+    classpath("com.google.cloud.tools:appengine-gradle-plugin:+")
+    classpath("com.moowork.gradle:gradle-node-plugin:+")
   }
 }
 
 group "co.firefire.fenergy"
 
-apply plugin: 'kotlin'
-apply plugin: 'groovy'
 apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'com.moowork.node'
+
+ext {
+  nodeVersion = '6.9.1'
+}
 
 repositories {
   mavenLocal()
@@ -25,17 +28,11 @@ dependencies {
   compile("org.springframework.boot:spring-boot-starter-actuator")
   compile("org.springframework.boot:spring-boot-starter-cache")
   compile("org.springframework.boot:spring-boot-starter-logging")
-  compile("org.springframework.boot:spring-boot-starter-groovy-templates")
   compile("org.springframework.boot:spring-boot-starter-mail")
   compile("org.springframework.boot:spring-boot-starter-security")
   compile("org.springframework.boot:spring-boot-starter-tomcat")
   compile("org.springframework.boot:spring-boot-starter-web")
   compile("org.springframework.security.oauth:spring-security-oauth2")
-  compile("org.codehaus.groovy:groovy")
-  compile("org.jetbrains.kotlin:kotlin-stdlib")
-
-  compile("org.webjars:jquery:+")
-  compile("org.webjars:js-cookie:+")
 
   testCompile("org.springframework.boot:spring-boot-test")
   testCompile("org.springframework:spring-test")
@@ -63,6 +60,12 @@ bootRun {
   }
 }
 
+node {
+  version = "$nodeVersion"
+  download = true
+  nodeModulesDir = file("${project(':fenergy-ui').projectDir}")
+}
+
 appengine {
   deploy {
     stopPreviousVersion = true
@@ -77,3 +80,30 @@ test {
     maxGranularity 2
   }
 }
+
+task clientServe(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'Angular CLI Client Tasks'
+  description = "Build and watches the client side assets for rebuilding"
+  args = ['run', 'start']
+}
+
+task clientBuild(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'Angular CLI Client Tasks'
+  description = 'Build client for development'
+  args = ['run', 'build']
+}
+
+task clientTest(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'Angular CLI Client Tasks'
+  description = "Run client tests"
+  args = ['run', 'test']
+}
+
+task clientBuildProd(type: NpmTask, dependsOn: 'npmInstall') {
+  group = 'Angular CLI Client Tasks'
+  description = 'Build client for production'
+  args = ['run', 'buildProd']
+}
+
+bootRun.dependsOn(clientBuild)
+jar.dependsOn(clientBuildProd)
