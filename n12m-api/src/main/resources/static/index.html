@@ -57,12 +57,6 @@
             <span id="span-profile-img" class="hidden" style="padding-right: 5px">
               <img id="profile-img" src="" class="img-circle" alt="" width="33" height="33">
             </span>
-            <span id="sign-out" class="hidden">
-              <a id="sign-out-button" href="#" class="btn btn-info"><span class="glyphicon glyphicon-log-out"></span> Sign out</a>
-            </span>
-            <span id="sign-in-google" class="hidden">
-              <a id="sign-in-google-link" class="btn btn-block btn-social btn-google" href="/login/google"><i class="fa fa-google"></i>Sign in with Google</a>
-            </span>
           </div>
         </div><!--/.nav-collapse -->
 
@@ -87,30 +81,18 @@
 
     <script>
       $(document).ready(function () {
-//        $(document).ajaxSend(function (e, xhr, options) {
-//          xhr.setRequestHeader("X-XSRF-TOKEN", Cookies.get("XSRF-TOKEN"));
-//        });
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader("X-XSRF-TOKEN", Cookies.get("XSRF-TOKEN"));
+        });
 
-        $.get("/currentlogin")
+        $.get("/n12m/currentlogin")
           .done(function (data) {
-            $("#sign-in-google").addClass('hidden');
-            $("#sign-out").removeClass('hidden');
-
             $("#profile-img").attr("src", data.pictureUrl);
             $("#span-profile-img").removeClass('hidden');
           })
           .fail(function () {
-            $("#sign-in-google").removeClass('hidden');
-            $("#sign-out").addClass('hidden');
             $("#span-profile-img").addClass('hidden');
           });
-
-        $("#sign-out-button").click(function () {
-          $.post("/logout")
-            .done(function () {
-              window.location.replace("/");
-            });
-        })
       });
     </script>
 

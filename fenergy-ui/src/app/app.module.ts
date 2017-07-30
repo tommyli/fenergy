@@ -10,7 +10,6 @@ import 'hammerjs';
 
 import {NavBarComponent} from './nav-bar/nav-bar.component';
 import {SignInComponent} from './sign-in/sign-in.component';
-import {APP_BASE_HREF} from "@angular/common";
 
 @NgModule({
             declarations: [
@@ -26,8 +25,7 @@ import {APP_BASE_HREF} from "@angular/common";
               MdIconModule,
               MdButtonModule
             ],
-            providers: [{provide: APP_BASE_HREF, useValue: '/auth'}],
-            // providers: [],
+            providers: [],
             bootstrap: [AppComponent]
           })
 

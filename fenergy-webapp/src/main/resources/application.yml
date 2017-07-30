@@ -1,6 +1,6 @@
 server:
+  context-path: /
   port: 8080
-  context-path: /auth
 
 spring:
   jmx.enabled: false
@@ -9,7 +9,7 @@ logging:
   file: fenergy.api.log
   path: /tmp/log/fenergy
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: INFO
 
 google:
   client:
@@ -31,10 +31,12 @@ github:
     userInfoUri: https://api.github.com/user
 
 security:
+  basic:
+    enabled: false
   oauth2:
     client:
-      client-id: fenergy
-      client-secret: fenergysecret
+      client-id: ${fenergy.oauth.fenergy.client.id}
+      client-secret: ${fenergy.oauth.fenergy.client.secret}
       scope: read,write
       auto-approve-scopes: '.*'
-      grant-types: authorization_code,refresh_token,password
+      grant-types: authorization_code

@@ -21,13 +21,13 @@ export class SignInComponent implements OnInit {
     console.log(`signing in ${client}`)
     this.authenticated = true;
     // this.http.get(`/login/${client}`).subscribe(data => {
-    this.http.get(`http://localhost:8080/auth/signin/${client}`).subscribe(data => {
+    this.http.get(`http://localhost:8080/signin/${client}`).subscribe(data => {
       console.log(`signed in ${data}`)
     });
   }
 
   signout() {
-    this.http.post(`/auth/logout`, {}).subscribe(
+    this.http.post(`/logout`, {}).subscribe(
       data => {
         this.authenticated = false;
         console.log("Signed out successfully.")

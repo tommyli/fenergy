@@ -1,7 +1,10 @@
 server:
+  context-path: /n12m
   port: 8081
 
 spring:
+  application:
+    name: n12m-api
   jmx.enabled: false
   datasource:
     type: org.apache.tomcat.jdbc.pool.DataSource
@@ -18,6 +21,8 @@ spring:
 logging:
   file: nm12.api.log
   path: /tmp/log/n12m
+  level:
+    org.springframework.security: INFO
 
 n12m:
   db:
@@ -38,11 +43,13 @@ flyway:
   placeholders.dbUserId: ${n12m.db.userid}
 
 security:
+  basic:
+    enabled: false
   oauth2:
     client:
-      client-id: fenergy
-      client-secret: fenergysecret
-      access-token-uri: http://localhost:8080/auth/oauth/token
-      user-authorization-uri: http://localhost:8080/auth/oauth/authorize
+      client-id: ${n12m.oauth.fenergy.client.id}
+      client-secret: ${n12m.oauth.fenergy.client.secret}
+      access-token-uri: ${n12m.oauth.server.url}/oauth/token
+      user-authorization-uri: ${n12m.oauth.server.url}/oauth/authorize
     resource:
-      user-info-uri: http://localhost:8080/auth/me
+      user-info-uri: ${n12m.oauth.server.url}/me
