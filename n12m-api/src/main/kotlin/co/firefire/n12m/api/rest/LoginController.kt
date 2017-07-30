@@ -4,7 +4,6 @@ package co.firefire.n12m.api.rest
 
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.provider.OAuth2Authentication
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -16,14 +15,9 @@ class LoginController {
         var log = LoggerFactory.getLogger(this::class.java)
     }
 
-    @RequestMapping("/currentlogin")
+    @RequestMapping("/user", "/currentlogin")
     fun currentlogin(principal: Principal?): Map<String, String> {
         return parsePrincipal(principal)
-    }
-
-    @GetMapping("/user")
-    fun user(principal: Principal?): Map<String, String> {
-        return currentlogin(principal)
     }
 
     private fun parsePrincipal(principal: Principal?): Map<String, String> {

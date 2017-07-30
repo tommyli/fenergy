@@ -1,5 +1,6 @@
 server:
   port: 8080
+  context-path: /auth
 
 spring:
   jmx.enabled: false
@@ -7,21 +8,33 @@ spring:
 logging:
   file: fenergy.api.log
   path: /tmp/log/fenergy
+  level:
+    org.springframework.security: DEBUG
 
 google:
   client:
-    clientId: ${fenergy.oauth.client.id}
-    clientSecret: ${fenergy.oauth.client.secret}
+    clientId: ${fenergy.oauth.google.client.id}
+    clientSecret: ${fenergy.oauth.google.client.secret}
     scope: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"]
     accessTokenUri: https://www.googleapis.com/oauth2/v4/token
     userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
-    tokenName: authorization_code
-#      tokenName: oauth_token
-#      authenticationScheme: query
-#      clientAuthenticationScheme: form
   resource:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
 
+github:
+  client:
+    clientId: ${fenergy.oauth.github.client.id}
+    clientSecret: ${fenergy.oauth.github.client.secret}
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+  resource:
+    userInfoUri: https://api.github.com/user
+
 security:
-  basic:
-    enabled: false
+  oauth2:
+    client:
+      client-id: fenergy
+      client-secret: fenergysecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+      grant-types: authorization_code,refresh_token,password

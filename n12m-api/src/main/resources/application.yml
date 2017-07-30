@@ -37,20 +37,12 @@ flyway:
   placeholders.schemaName: ${n12m.db.schema}
   placeholders.dbUserId: ${n12m.db.userid}
 
-google:
-  client:
-    clientId: ${n12m.oauth.client.id}
-    clientSecret: ${n12m.oauth.client.secret}
-    scope: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"]
-    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
-    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
-    tokenName: authorization_code
-#      tokenName: oauth_token
-#      authenticationScheme: query
-#      clientAuthenticationScheme: form
-  resource:
-    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
-
 security:
-  basic:
-    enabled: false
+  oauth2:
+    client:
+      client-id: fenergy
+      client-secret: fenergysecret
+      access-token-uri: http://localhost:8080/auth/oauth/token
+      user-authorization-uri: http://localhost:8080/auth/oauth/authorize
+    resource:
+      user-info-uri: http://localhost:8080/auth/me

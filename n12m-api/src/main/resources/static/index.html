@@ -87,9 +87,9 @@
 
     <script>
       $(document).ready(function () {
-        $(document).ajaxSend(function (e, xhr, options) {
-          xhr.setRequestHeader("X-XSRF-TOKEN", Cookies.get("XSRF-TOKEN"));
-        });
+//        $(document).ajaxSend(function (e, xhr, options) {
+//          xhr.setRequestHeader("X-XSRF-TOKEN", Cookies.get("XSRF-TOKEN"));
+//        });
 
         $.get("/currentlogin")
           .done(function (data) {
