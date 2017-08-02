@@ -27,10 +27,10 @@ class LoginController {
             if (details is Map<*, *>) {
                 result.plus(mapOf(
                         "email" to details["email"] as String,
-                        "pictureUrl" to details["picture"] as String,
-                        "locale" to details["locale"] as String,
-                        "familyName" to details["family_name"] as String,
-                        "givenName" to details["given_name"] as String
+                        "givenName" to details["givenName"] as String,
+                        "familyName" to details["familyName"] as String,
+                        "pictureUrl" to details["pictureUrl"] as String,
+                        "locale" to details["locale"] as String
                 ))
             } else {
                 result

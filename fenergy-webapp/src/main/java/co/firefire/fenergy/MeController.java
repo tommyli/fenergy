@@ -44,9 +44,9 @@ public class MeController {
 
     Map<String, String> result = new HashMap<>();
     result.put("email", authDetails.get("email"));
-    result.put("given_name", authDetails.get("given_name"));
-    result.put("family_name", authDetails.get("family_name"));
-    result.put("picture", authDetails.get("picture"));
+    result.put("givenName", authDetails.get("given_name"));
+    result.put("familyName", authDetails.get("family_name"));
+    result.put("pictureUrl", authDetails.get("picture"));
     result.put("locale", authDetails.get("locale"));
 
     return result;

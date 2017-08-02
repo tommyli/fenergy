@@ -1,5 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
+
+class Principal {
+  name: string;
+  email: string;
+  givenName: string;
+  familyName: string;
+  pictureUrl: string;
+  locale: string;
+}
 
 @Component({
              selector: 'app-sign-in',
@@ -9,31 +18,38 @@ import {HttpClient} from "@angular/common/http";
 export class SignInComponent implements OnInit {
 
   authenticated = false;
+  name: string;
+  pictureUrl: string;
 
   constructor(private http: HttpClient) {
   }
 
   ngOnInit() {
-
+    this.http.get<Principal>('http://localhost:8080/currentlogin').subscribe(
+      principal => {
+        this.authenticated = true;
+        this.name = principal.name;
+        this.pictureUrl = principal.pictureUrl;
+      },
+      error => {
+        console.log(`Error signing in: ${error}`);
+      }
+    );
   }
 
   signin(client: String) {
-    console.log(`signing in ${client}`)
-    this.authenticated = true;
-    // this.http.get(`/login/${client}`).subscribe(data => {
-    this.http.get(`http://localhost:8080/signin/${client}`).subscribe(data => {
-      console.log(`signed in ${data}`)
-    });
+    console.log(`signing in ${client}`);
+    window.location.href = `http://localhost:8080/signin/${client}`;
   }
 
   signout() {
     this.http.post(`/logout`, {}).subscribe(
       data => {
         this.authenticated = false;
-        console.log("Signed out successfully.")
+        console.log('Signed out successfully');
       },
       error => {
-        console.log(`Unable to sign out due to error: ${error}`)
+        console.log(`Unable to sign out due to error: ${error}`);
       }
     );
   }

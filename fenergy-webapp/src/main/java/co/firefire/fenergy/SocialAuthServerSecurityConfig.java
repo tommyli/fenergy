@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
@@ -28,7 +29,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -48,8 +48,7 @@ public class SocialAuthServerSecurityConfig extends WebSecurityConfigurerAdapter
     http.antMatcher("/**").authorizeRequests().antMatchers("/", "/index.html", "/*.bundle.js").permitAll()
       .anyRequest().authenticated()
       .and().exceptionHandling()
-//      .authenticationEntryPoint(new Http401AuthenticationEntryPoint(""))
-      .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/index.html"))
+      .authenticationEntryPoint(new Http401AuthenticationEntryPoint(""))
       .and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
       .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
       .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);

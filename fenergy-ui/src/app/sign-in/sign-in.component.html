@@ -1,6 +1,4 @@
 <span *ngIf="!authenticated">
-  <a href="http://localhost:8080/signin/google">login</a>
-  <a href="http://localhost:8080/logout">logout</a>
   <button md-icon-button (click)="signout();"><i class="fa fa-sign-out fa-2x"></i></button>
   <span class="sign-in-label">Sign in with</span>
   <button md-icon-button><i class="fa fa-github fa-2x"></i></button>
@@ -8,6 +6,9 @@
 
 </span>
 <span *ngIf="authenticated">
-  <span>Welcome</span>
+  <span>Welcome {{name}}</span>
+  <span id="span-profile-img" style="padding-right: 5px">
+    <img id="profile-img" src="{{pictureUrl}}" class="img-circle" alt="profile image" width="33" height="33">
+  </span>
   <button md-icon-button (click)="signout();"><i class="fa fa-sign-out fa-2x"></i></button>
 </span>
