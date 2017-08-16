@@ -1,0 +1,6 @@
+security:
+  ignored: /**
+
+management:
+  security:
+    enabled: false

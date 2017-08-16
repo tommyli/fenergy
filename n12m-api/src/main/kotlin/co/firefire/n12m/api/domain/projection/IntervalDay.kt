@@ -1,6 +1,6 @@
 // Tommy Li (tommy.li@firefire.co), 2017-06-24
 
-package co.firefire.n12m.api.rest.projection
+package co.firefire.n12m.api.domain.projection
 
 import co.firefire.n12m.api.domain.IntervalDay
 import co.firefire.n12m.api.domain.IntervalQuality

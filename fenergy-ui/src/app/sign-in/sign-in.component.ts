@@ -25,7 +25,7 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<Principal>('http://localhost:8080/currentlogin').subscribe(
+    this.http.get<Principal>('/auth/currentlogin').subscribe(
       principal => {
         this.authenticated = true;
         this.name = principal.name;
@@ -39,11 +39,11 @@ export class SignInComponent implements OnInit {
 
   signin(client: String) {
     console.log(`signing in ${client}`);
-    window.location.href = `http://localhost:8080/signin/${client}`;
+    window.location.href = `/auth/signin/${client}`;
   }
 
   signout() {
-    this.http.post(`/logout`, {}).subscribe(
+    this.http.post(`/auth/logout`, {}).subscribe(
       data => {
         this.authenticated = false;
         console.log('Signed out successfully');

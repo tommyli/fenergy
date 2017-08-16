@@ -1,9 +1,10 @@
 <md-toolbar-row>
   <md-toolbar color="primary">
-    <span>FENERGY</span>
-
-    <span class="flex-space"></span>
-
-    <app-sign-in></app-sign-in>
+    <div fxLayout="row" fxFlexFill>
+      <div fxFlex="none" fxFlexAlign="center">FENERGY</div>
+      <app-login-nmi-list fxFlex="nogrow" fxFlexOffset="1" fxFlexAlign="center"></app-login-nmi-list>
+      <div fxFlex></div>
+      <app-sign-in fxFlex="nogrow" fxFlexAlign="center"></app-sign-in>
+    </div>
   </md-toolbar>
 </md-toolbar-row>

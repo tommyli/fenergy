@@ -14,6 +14,10 @@ public class MeController {
 
   @GetMapping(value = {"/user", "/login", "/currentlogin"})
   public Map<String, String> currentlogin(Principal principal) {
+    if (principal == null) {
+      return new HashMap<>();
+    }
+    
     Map<String, String> result = new HashMap<>();
     result.put("name", principal.getName());
 
@@ -26,6 +30,10 @@ public class MeController {
 
   @GetMapping(value = {"/me"})
   public Map<String, String> me(Principal principal) {
+    if (principal == null) {
+      return new HashMap<>();
+    }
+
     Map<String, String> result = new HashMap<>();
     result.put("name", principal.getName());
 
