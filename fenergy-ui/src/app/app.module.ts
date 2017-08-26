@@ -7,17 +7,9 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpModule} from '@angular/http';
 
-import {
-  MdButtonModule,
-  MdGridListModule,
-  MdIconModule,
-  MdOptionModule,
-  MdSelectModule,
-  MdTabsModule,
-  MdToolbarModule
-} from '@angular/material';
+import {MdButtonModule, MdGridListModule, MdIconModule, MdOptionModule, MdSelectModule, MdTabsModule, MdToolbarModule} from '@angular/material';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import {AppComponent} from './app.component';
 import {MainViewComponent} from './main-view/main-view.component';
 import {NavBarComponent} from './nav-bar/nav-bar.component';

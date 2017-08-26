@@ -2,6 +2,9 @@
 
 language: java
 
+node_js:
+  - "6"
+  
 jdk:
   - oraclejdk8
 
@@ -22,6 +25,7 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/fenergy-ui/node_modules
 
 before_script:
   - psql -f n12m-api/src/main/resources/db/setup_db.sql -U postgres
