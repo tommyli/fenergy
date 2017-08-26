@@ -112,4 +112,4 @@ task clientBuildProd(type: NpmTask, dependsOn: 'npmInstall') {
 }
 
 bootRun.dependsOn(clientBuild)
-jar.dependsOn(clientBuildProd)
+//jar.dependsOn(clientBuildProd)
