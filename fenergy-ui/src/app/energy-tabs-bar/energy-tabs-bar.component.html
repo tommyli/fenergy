@@ -1,12 +1,17 @@
 <md-tab-group>
-  <!--<md-tab label="Dashboard">-->
-  <!--<h1>Show consolidated data</h1>-->
-  <!--</md-tab>-->
+
+  <md-tab label="Dashboard">
+    <div fxLayout="column">
+      <div fxFlex="grow" fxFlexOffset="2">
+        <app-dashboard></app-dashboard>
+      </div>
+    </div>
+  </md-tab>
+
   <md-tab label="Consumption">
     <div fxLayout="column">
       <div fxFlex="grow" fxFlexOffset="2">
-        <h1>Show consumption</h1>
-        <app-usage-graph></app-usage-graph>
+        <app-usage-detail></app-usage-detail>
       </div>
     </div>
   </md-tab>
@@ -14,7 +19,7 @@
   <md-tab label="Solar">
     <div fxLayout="column">
       <div fxFlex="grow" fxFlexOffset="2">
-        <h1>Show solar data</h1>
+        <app-solar-detail></app-solar-detail>
       </div>
     </div>
   </md-tab>
@@ -22,8 +27,9 @@
   <md-tab label="Battery">
     <div fxLayout="column">
       <div fxFlex="grow" fxFlexOffset="2">
-        <h1>Show battery data</h1>
+        <app-battery-detail></app-battery-detail>
       </div>
     </div>
   </md-tab>
+
 </md-tab-group>

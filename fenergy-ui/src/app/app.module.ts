@@ -16,7 +16,11 @@ import {NavBarComponent} from './nav-bar/nav-bar.component';
 import {SignInComponent} from './sign-in/sign-in.component';
 import {EnergyTabsBarComponent} from './energy-tabs-bar/energy-tabs-bar.component';
 import {LoginNmiListComponent} from './login-nmi-list/login-nmi-list.component';
-import {UsageGraphComponent} from './usage-graph/usage-graph.component';
+import {UsageDetailComponent} from './usage-detail/usage-detail.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {SolarDetailComponent} from './solar-detail/solar-detail.component';
+import {BatteryDetailComponent} from './battery-detail/battery-detail.component';
+import {AppRoutingModule} from './app-routing.module';
 
 @NgModule({
             declarations: [
@@ -26,7 +30,10 @@ import {UsageGraphComponent} from './usage-graph/usage-graph.component';
               EnergyTabsBarComponent,
               LoginNmiListComponent,
               MainViewComponent,
-              UsageGraphComponent
+              UsageDetailComponent,
+              DashboardComponent,
+              SolarDetailComponent,
+              BatteryDetailComponent
             ],
             imports: [
               BrowserAnimationsModule,
@@ -40,21 +47,8 @@ import {UsageGraphComponent} from './usage-graph/usage-graph.component';
               MdOptionModule,
               MdGridListModule,
               MdIconModule,
-              MdButtonModule
-            ],
-            exports: [
-              HttpModule,
-              BrowserModule,
-              BrowserAnimationsModule,
-              HttpClientModule,
-              FlexLayoutModule,
-              MdToolbarModule,
-              MdGridListModule,
-              MdTabsModule,
-              MdSelectModule,
-              MdOptionModule,
-              MdIconModule,
-              MdButtonModule
+              MdButtonModule,
+              AppRoutingModule
             ],
             providers: [],
             bootstrap: [AppComponent]
