@@ -16,6 +16,7 @@ import {NavBarComponent} from './nav-bar/nav-bar.component';
 import {SignInComponent} from './sign-in/sign-in.component';
 import {EnergyTabsBarComponent} from './energy-tabs-bar/energy-tabs-bar.component';
 import {LoginNmiListComponent} from './login-nmi-list/login-nmi-list.component';
+import {UsageGraphComponent} from './usage-graph/usage-graph.component';
 
 @NgModule({
             declarations: [
@@ -24,7 +25,8 @@ import {LoginNmiListComponent} from './login-nmi-list/login-nmi-list.component';
               SignInComponent,
               EnergyTabsBarComponent,
               LoginNmiListComponent,
-              MainViewComponent
+              MainViewComponent,
+              UsageGraphComponent
             ],
             imports: [
               BrowserAnimationsModule,
