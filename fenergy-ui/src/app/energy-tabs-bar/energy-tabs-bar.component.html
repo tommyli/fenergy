@@ -1,35 +1,16 @@
-<md-tab-group>
+<nav md-tab-nav-bar>
 
-  <md-tab label="Dashboard">
-    <div fxLayout="column">
-      <div fxFlex="grow" fxFlexOffset="2">
-        <app-dashboard></app-dashboard>
-      </div>
-    </div>
-  </md-tab>
+  <a md-tab-link *ngFor="let tabRoute of TAB_ROUTES; let i = index"
+     [routerLink]="tabRoute.route"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{tabRoute.label}}
+    </a>
 
-  <md-tab label="Consumption">
-    <div fxLayout="column">
-      <div fxFlex="grow" fxFlexOffset="2">
-        <app-usage-detail></app-usage-detail>
-      </div>
-    </div>
-  </md-tab>
+</nav>
 
-  <md-tab label="Solar">
-    <div fxLayout="column">
-      <div fxFlex="grow" fxFlexOffset="2">
-        <app-solar-detail></app-solar-detail>
-      </div>
-    </div>
-  </md-tab>
-
-  <md-tab label="Battery">
-    <div fxLayout="column">
-      <div fxFlex="grow" fxFlexOffset="2">
-        <app-battery-detail></app-battery-detail>
-      </div>
-    </div>
-  </md-tab>
-
-</md-tab-group>
+<div fxLayout="column">
+  <div fxFlex="grow" fxFlexOffset="2">
+    <router-outlet></router-outlet>
+  </div>
+</div>

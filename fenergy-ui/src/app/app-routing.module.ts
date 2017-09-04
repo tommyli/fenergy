@@ -6,7 +6,7 @@ import {BatteryDetailComponent} from './battery-detail/battery-detail.component'
 import {SolarDetailComponent} from './solar-detail/solar-detail.component';
 import {UsageDetailComponent} from './usage-detail/usage-detail.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'dashboard', component: DashboardComponent},
   {path: 'usage', component: UsageDetailComponent},
@@ -15,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-            imports: [RouterModule.forRoot(routes)],
+            imports: [RouterModule.forRoot(ROUTES)],
             exports: [RouterModule]
           })
 export class AppRoutingModule {

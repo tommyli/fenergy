@@ -8,6 +8,13 @@ import {Component, OnInit} from '@angular/core';
 
 export class EnergyTabsBarComponent implements OnInit {
 
+  readonly TAB_ROUTES = [
+    {'label': 'Dashboard', 'route': '/dashboard'},
+    {'label': 'Consumption', 'route': '/usage'},
+    {'label': 'Solar', 'route': '/solar'},
+    {'label': 'Battery', 'route': '/battery'}
+  ];
+
   constructor() {
   }
 
