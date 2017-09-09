@@ -21,6 +21,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {SolarDetailComponent} from './solar-detail/solar-detail.component';
 import {BatteryDetailComponent} from './battery-detail/battery-detail.component';
 import {AppRoutingModule} from './app-routing.module';
+import {AuthService} from './service/auth.service';
 
 @NgModule({
             declarations: [
@@ -50,7 +51,7 @@ import {AppRoutingModule} from './app-routing.module';
               MdButtonModule,
               AppRoutingModule
             ],
-            providers: [],
+            providers: [AuthService],
             bootstrap: [AppComponent]
           })
 

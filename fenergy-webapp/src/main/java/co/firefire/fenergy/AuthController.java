@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class MeController {
+public class AuthController {
 
-  @GetMapping(value = {"/user", "/login", "/currentlogin"})
+  @GetMapping(value = {"/auth/user", "/auth/login", "/auth/currentlogin"})
   public Map<String, String> currentlogin(Principal principal) {
     if (principal == null) {
       return new HashMap<>();

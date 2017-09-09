@@ -12,12 +12,15 @@ import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntr
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -33,6 +36,8 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableOAuth2Client
@@ -49,7 +54,8 @@ public class SocialAuthServerSecurityConfig extends WebSecurityConfigurerAdapter
       .anyRequest().authenticated()
       .and().exceptionHandling()
       .authenticationEntryPoint(new Http401AuthenticationEntryPoint(""))
-      .and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
+//      .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/index.html"))
+      .and().logout().logoutUrl("/auth/logout").logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
       .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
       .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
   }
@@ -78,8 +84,8 @@ public class SocialAuthServerSecurityConfig extends WebSecurityConfigurerAdapter
   private Filter ssoFilter() {
     CompositeFilter filter = new CompositeFilter();
     List<Filter> filters = new ArrayList<>();
-    filters.add(ssoFilter(google(), "/signin/google"));
-    filters.add(ssoFilter(github(), "/signin/github"));
+    filters.add(ssoFilter(google(), "/auth/signin/google"));
+    filters.add(ssoFilter(github(), "/auth/signin/github"));
     filter.setFilters(filters);
 
     return filter;
@@ -121,5 +127,23 @@ public class SocialAuthServerSecurityConfig extends WebSecurityConfigurerAdapter
       return resource;
     }
 
+  }
+
+  @Configuration
+  public static class WebApplicationConfig extends WebMvcConfigurerAdapter {
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+      registry.addViewController("/notFound").setViewName("forward:/index.html");
+    }
+
+
+    @Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
+      return container -> {
+        container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,
+                                              "/notFound"));
+      };
+    }
   }
 }
