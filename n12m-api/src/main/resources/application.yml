@@ -10,8 +10,8 @@ n12m:
     userid: n12mtest
     password: password
   oauth:
-    auth-server-url: http://localhost
-    auth-server-client-id: fenergy-client
+    auth-server-url: http://localhost:8080
+    auth-server-client-id: fenergy-client-id
     auth-server-client-secret: fenergy-client-secret
 
 spring:

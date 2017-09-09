@@ -54,7 +54,6 @@ public class SocialAuthServerSecurityConfig extends WebSecurityConfigurerAdapter
       .anyRequest().authenticated()
       .and().exceptionHandling()
       .authenticationEntryPoint(new Http401AuthenticationEntryPoint(""))
-//      .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/index.html"))
       .and().logout().logoutUrl("/auth/logout").logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
       .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
       .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);

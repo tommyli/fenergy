@@ -11,6 +11,11 @@ logging:
   level:
     org.springframework.security: INFO
 
+fenergy:
+  oauth:
+    client-id: fenergy-client-id
+    client-secret: fenergy-client-secret
+    
 google:
   client:
     clientId: ${fenergy.oauth.google.client.id}
@@ -35,8 +40,8 @@ security:
     enabled: false
   oauth2:
     client:
-      client-id: ${fenergy.oauth.fenergy.client.id}
-      client-secret: ${fenergy.oauth.fenergy.client.secret}
+      client-id: ${fenergy.oauth.client-id}
+      client-secret: ${fenergy.oauth.client-secret}
       scope: read,write
       auto-approve-scopes: '.*'
       grant-types: authorization_code

@@ -4,7 +4,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Principal} from '../model/principal';
 import {HttpClient} from '@angular/common/http';
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
@@ -19,10 +18,11 @@ export class AuthService {
   getCurrentPrincipal(): Observable<Principal> {
     return this.http.get<Principal>('/auth/currentlogin')
       .catch((error: any) => {
+        console.log(JSON.stringify(error));
         if (error.status === 401) {
           return Observable.throw(`Not authenticated: ${error.message}`);
         } else {
-          return Observable.throw(`Unexpected server error: ${error.message}`);
+          return Observable.throw(`Unexpected server error: [${error.status}], [${error.statusText}] ${error.message}`);
         }
       });
   }
