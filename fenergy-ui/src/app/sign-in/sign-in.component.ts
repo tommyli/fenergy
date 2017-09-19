@@ -17,7 +17,7 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
     this.authenticated = false;
-    this.authService.getCurrentPrincipal().subscribe(
+    this.authService.currentPrincipal.subscribe(
       principal => {
         this.principal = principal;
         this.authenticated = true;

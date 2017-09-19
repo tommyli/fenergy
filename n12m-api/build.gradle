@@ -1,7 +1,5 @@
 // Tommy Li (tommy.li@firefire.co), 2017-01-16
 
-description = "NEM12 Manager API"
-
 import co.firefire.n12m.db.RunSqlScriptTask
 
 buildscript {
@@ -24,6 +22,15 @@ buildscript {
   }
 }
 
+plugins {
+  id 'org.springframework.boot' version '1.5.7.RELEASE'
+}
+apply plugin: 'kotlin'
+apply plugin: 'groovy'
+apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'com.google.cloud.tools.appengine'
+
+description = "NEM12 Manager API"
 group "co.firefire.n12m.api"
 
 ext {
@@ -31,12 +38,6 @@ ext {
   postgresDriverVersion = '42.1.1.jre7'
   spockVersion = '1.1-groovy-2.4'
 }
-
-apply plugin: 'kotlin'
-apply plugin: 'groovy'
-apply plugin: 'org.flywaydb.flyway'
-apply plugin: 'com.google.cloud.tools.appengine'
-apply plugin: 'org.springframework.boot'
 
 repositories {
   mavenLocal()
@@ -84,10 +85,6 @@ def sysProps = [
   'n12m.db.userid'  : project.property('n12m.db.userid'),
   'n12m.db.password': project.property('n12m.db.password')
 ]
-
-springBoot {
-  executable = true
-}
 
 bootRun {
   jvmArgs = ['-Dspring.output.ansi.enabled=always']

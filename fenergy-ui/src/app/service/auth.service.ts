@@ -5,26 +5,39 @@ import {Observable} from 'rxjs/Observable';
 import {Principal} from '../model/principal';
 import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/isEmpty';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/empty';
 
 @Injectable()
 export class AuthService {
 
-  principal: Principal = null;
+  private principal: Observable<Principal> = Observable.empty();
 
   constructor(private http: HttpClient) {
   }
 
-  getCurrentPrincipal(): Observable<Principal> {
-    return this.http.get<Principal>('/auth/currentlogin')
-      .catch((error: any) => {
-        console.log(JSON.stringify(error));
-        if (error.status === 401) {
-          return Observable.throw(`Not authenticated: ${error.message}`);
-        } else {
-          return Observable.throw(`Unexpected server error: [${error.status}], [${error.statusText}] ${error.message}`);
-        }
-      });
+  get currentPrincipal(): Observable<Principal> {
+    if (this.principal.isEmpty()) {
+      this.principal = this.http.get<Principal>('/auth/currentlogin')
+        .catch((error: any) => {
+          console.log(JSON.stringify(error));
+          if (error.status === 401) {
+            return Observable.throw(`Not authenticated: ${error.message}`);
+          } else {
+            return Observable.throw(`Unexpected server error: [${error.status}], [${error.statusText}] ${error.message}`);
+          }
+        });
+
+      return this.principal;
+    } else {
+      return this.principal;
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return !this.principal.isEmpty();
   }
 
   signin(client: String) {
