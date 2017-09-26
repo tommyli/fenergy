@@ -8,7 +8,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:+")
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
     classpath("com.google.cloud.tools:appengine-gradle-plugin:+")
     classpath("com.moowork.gradle:gradle-node-plugin:+")
   }
@@ -31,18 +31,18 @@ repositories {
 }
 
 dependencies {
-  compile("org.springframework.boot:spring-boot-autoconfigure")
-  compile("org.springframework.boot:spring-boot-starter-actuator")
-  compile("org.springframework.boot:spring-boot-starter-cache")
-  compile("org.springframework.boot:spring-boot-starter-logging")
-  compile("org.springframework.boot:spring-boot-starter-mail")
-  compile("org.springframework.boot:spring-boot-starter-security")
-  compile("org.springframework.boot:spring-boot-starter-tomcat")
-  compile("org.springframework.boot:spring-boot-starter-web")
-  compile("org.springframework.security.oauth:spring-security-oauth2")
+  compile("org.springframework.boot:spring-boot-autoconfigure:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-mail:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion")
+  compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+  compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
 
-  testCompile("org.springframework.boot:spring-boot-test")
-  testCompile("org.springframework:spring-test")
+  testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
+  testCompile("org.springframework:spring-test:$springTestVersion")
   testCompile("org.spockframework:spock-core:$spockVersion")
   testCompile("org.spockframework:spock-spring:$spockVersion")
 }
