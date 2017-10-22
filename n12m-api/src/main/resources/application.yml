@@ -34,7 +34,7 @@ logging:
   file: nm12.api.log
   path: /tmp/log/n12m
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
 
 flyway:
   driver: ${n12m.db.driver}
@@ -57,3 +57,4 @@ security:
       user-authorization-uri: ${n12m.oauth.auth-server-url}/oauth/authorize
     resource:
       user-info-uri: ${n12m.oauth.auth-server-url}/me
+#      filter-order: 3

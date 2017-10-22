@@ -45,6 +45,14 @@ export class AuthService {
   }
 
   signout() {
+    // this.http.post(`/api/logout`, {}).subscribe(
+    //   data => {
+    //     console.log('Signed out resource server successfully');
+    //   },
+    //   error => {
+    //     console.log(`Unable to sign out resource server due to error: ${error}`);
+    //   }
+    // );
     this.http.post(`/auth/logout`, {}).subscribe(
       data => {
         console.log('Signed out successfully');

@@ -36,8 +36,6 @@ github:
     userInfoUri: https://api.github.com/user
 
 security:
-  basic:
-    enabled: false
   oauth2:
     client:
       client-id: ${fenergy.oauth.client-id}

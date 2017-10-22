@@ -17,12 +17,12 @@ public class AuthController {
     if (principal == null) {
       return new HashMap<>();
     }
-    
+
     Map<String, String> result = new HashMap<>();
     result.put("name", principal.getName());
 
     if (principal instanceof OAuth2Authentication && ((OAuth2Authentication) principal).getUserAuthentication() != null) {
-      return getAuthDetails(((OAuth2Authentication) principal).getUserAuthentication());
+      result.putAll(getAuthDetails(((OAuth2Authentication) principal).getUserAuthentication()));
     }
 
     return result;
@@ -40,7 +40,7 @@ public class AuthController {
     if (principal instanceof OAuth2Authentication && ((OAuth2Authentication) principal).getUserAuthentication() != null) {
       Authentication userAuth = ((OAuth2Authentication) principal).getUserAuthentication();
       if (userAuth instanceof OAuth2Authentication && ((OAuth2Authentication) userAuth).getUserAuthentication() != null) {
-        return getAuthDetails(((OAuth2Authentication) userAuth).getUserAuthentication());
+        result.putAll(getAuthDetails(((OAuth2Authentication) userAuth).getUserAuthentication()));
       }
     }
 

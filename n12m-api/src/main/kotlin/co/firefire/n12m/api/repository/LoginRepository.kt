@@ -11,4 +11,6 @@ interface LoginRepository : PagingAndSortingRepository<Login, Long> {
 
     fun findByEmail(email: String): Login?
 
+    fun findByEmailOrUsername(email: String, username: String): Login?
+
 }

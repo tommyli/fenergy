@@ -7,7 +7,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpModule} from '@angular/http';
 
-import {MdButtonModule, MdGridListModule, MdIconModule, MdOptionModule, MdSelectModule, MdTabsModule, MdToolbarModule} from '@angular/material';
+import {MdButtonModule, MdDialogModule, MdGridListModule, MdIconModule, MdOptionModule, MdSelectModule, MdTabsModule, MdToolbarModule} from '@angular/material';
 
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AppComponent} from './app.component';
@@ -26,6 +26,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LoggingInterceptor} from './service/logging.interceptor';
 import {HttpErrorInterceptor} from './service/http-error.interceptor';
 import {SimpleNotificationsModule} from 'angular2-notifications';
+import {UploadNem12Component} from './upload-nem12/upload-nem12.component';
 
 @NgModule({
             declarations: [
@@ -38,7 +39,11 @@ import {SimpleNotificationsModule} from 'angular2-notifications';
               UsageDetailComponent,
               DashboardComponent,
               SolarDetailComponent,
-              BatteryDetailComponent
+              BatteryDetailComponent,
+              UploadNem12Component
+            ],
+            entryComponents: [
+              UploadNem12Component
             ],
             imports: [
               BrowserAnimationsModule,
@@ -52,6 +57,7 @@ import {SimpleNotificationsModule} from 'angular2-notifications';
               MdOptionModule,
               MdGridListModule,
               MdIconModule,
+              MdDialogModule,
               MdButtonModule,
               FormsModule,
               ReactiveFormsModule,

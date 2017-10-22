@@ -10,4 +10,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableOAuth2Sso
 @EnableResourceServer
 public class ResourceServerSecurityConfig {
+
+//  @Override
+//  public void configure(HttpSecurity http) throws Exception {
+//    http
+//      .authorizeRequests().anyRequest().authenticated()
+////      .and().csrf().disable()
+//      .and().logout().logoutUrl("/auth/logout").logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
+//      .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//    ;
+//  }
 }
