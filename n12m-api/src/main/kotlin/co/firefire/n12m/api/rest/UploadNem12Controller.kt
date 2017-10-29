@@ -42,7 +42,7 @@ class UploadNem12Controller(
         return mapOf("file" to "${file.originalFilename}")
     }
 
-    @GetMapping("/upload")
+    @GetMapping("/getUpload")
     fun upload(): Map<String, String> {
         return mapOf("get file" to "")
     }

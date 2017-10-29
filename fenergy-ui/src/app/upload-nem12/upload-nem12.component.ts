@@ -35,8 +35,7 @@ export class UploadNem12Component implements OnInit {
       // headers.append('Content-Type', 'multipart/form-data');
       // headers.append('Accept', 'application/json');
       // const options = new RequestOptions({headers: headers});
-      this.http.post(`/api/upload`, formData)
-      // this.http.post(`http://localhost:8081/n12m/upload`, formData)
+      this.http.get(`/api/getUpload`)
         .map(res =>
                console.log(JSON.stringify(res))
         )
@@ -45,6 +44,15 @@ export class UploadNem12Component implements OnInit {
           data => console.log('success'),
           error => console.log(error)
         );
+      // this.http.post(`/api/postUpload`, formData)
+      //   .map(res =>
+      //          console.log(JSON.stringify(res))
+      //   )
+      //   .catch(error => Observable.throw(error))
+      //   .subscribe(
+      //     data => console.log('success'),
+      //     error => console.log(error)
+      //   );
     }
   }
 
