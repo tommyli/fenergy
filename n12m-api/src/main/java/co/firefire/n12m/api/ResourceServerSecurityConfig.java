@@ -17,7 +17,6 @@ public class ResourceServerSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(HttpSecurity http) throws Exception {
     http
-//      .csrf().disable()
       .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
       .and().authorizeRequests().anyRequest()
       .authenticated()

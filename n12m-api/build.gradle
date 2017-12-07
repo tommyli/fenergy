@@ -57,6 +57,7 @@ dependencies {
   compile("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
   compile("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion")
   compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+  compile("org.springframework.cloud:spring-cloud-starter-zuul:$springCloudZuulVersion")
   compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
   compile("org.codehaus.groovy:groovy:+")
   compile("org.jetbrains.kotlin:kotlin-stdlib:+")

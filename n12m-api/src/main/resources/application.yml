@@ -57,4 +57,4 @@ security:
       user-authorization-uri: ${n12m.oauth.auth-server-url}/oauth/authorize
     resource:
       user-info-uri: ${n12m.oauth.auth-server-url}/me
-#      filter-order: 3
+  sessions: never

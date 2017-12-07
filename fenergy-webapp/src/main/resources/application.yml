@@ -9,7 +9,7 @@ logging:
   file: fenergy.api.log
   path: /tmp/log/fenergy
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
 
 fenergy:
   oauth:
@@ -43,3 +43,14 @@ security:
       scope: read,write
       auto-approve-scopes: '.*'
       grant-types: authorization_code
+  basic:
+    enabled: false
+  sessions: never
+
+zuul:
+#  ignored-services: '*'
+  routes:
+    n12m-api:
+      path: /n12m/**
+      url: http://localhost:8081/n12m
+      stripPrefix: false

@@ -35,7 +35,7 @@ export class UploadNem12Component implements OnInit {
       // headers.append('Content-Type', 'multipart/form-data');
       // headers.append('Accept', 'application/json');
       // const options = new RequestOptions({headers: headers});
-      this.http.get(`/api/getUpload`)
+      this.http.get(`/n12m/getUpload`)
         .map(res =>
                console.log(JSON.stringify(res))
         )
