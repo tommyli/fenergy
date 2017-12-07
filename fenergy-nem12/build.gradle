@@ -30,8 +30,8 @@ apply plugin: 'groovy'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'com.google.cloud.tools.appengine'
 
-description = "NEM12 Manager API"
-group "co.firefire.n12m.api"
+description = "Fenergy"
+group "co.firefire.fenergy.nem12"
 
 ext {
   flywayVersion = '4.2.0'

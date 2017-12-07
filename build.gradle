@@ -23,7 +23,7 @@ wrapper {
 }
 
 version "0.1.0"
-group "co.firefire.n12m"
+group "co.firefire.fenergy"
 
 repositories {
   mavenLocal()

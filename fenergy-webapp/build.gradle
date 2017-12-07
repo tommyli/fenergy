@@ -22,7 +22,7 @@ apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'com.moowork.node'
 
 description = "Fenergy Web Application Server"
-group "co.firefire.fenergy"
+group "co.firefire.fenergy.webapp"
 
 repositories {
   mavenLocal()

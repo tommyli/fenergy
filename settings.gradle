@@ -1,3 +1,3 @@
-rootProject.name = 'nem12-manager'
+rootProject.name = 'fenergy'
 
-include 'n12m-api', 'fenergy-ui', 'fenergy-webapp'
+include 'fenergy-nem12', 'fenergy-ui', 'fenergy-webapp'
