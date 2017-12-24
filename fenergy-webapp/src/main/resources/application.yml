@@ -51,6 +51,68 @@ zuul:
 #  ignored-services: '*'
   routes:
     n12m-api:
-      path: /n12m/**
-      url: http://localhost:8081/n12m
+      path: /nem12/**
+      url: http://localhost:8081/nem12
       stripPrefix: false
+
+
+server:
+  context-path: /nem12
+  port: 8081
+
+n12m:
+  db:
+    driver: org.postgresql.Driver
+    schema: nem12
+    url: jdbc:postgresql://localhost/test
+    userid: n12mtest
+    password: password
+  oauth:
+    auth-server-url: http://localhost:8080
+    auth-server-client-id: fenergy-client-id
+    auth-server-client-secret: fenergy-client-secret
+
+spring:
+  application:
+    name: nem12-api
+  jmx.enabled: false
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    driver: class-name=${n12m.db.driver}
+    url: ${n12m.db.url}
+    username: ${n12m.db.userid}
+    password: ${n12m.db.password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate.ddl-auto: none
+    generate-ddl: false
+
+logging:
+  file: nm12.api.log
+  path: /tmp/log/nem12
+  level:
+    org.springframework.security: DEBUG
+
+flyway:
+  driver: ${n12m.db.driver}
+  schemas: ${n12m.db.schema}
+  url: ${n12m.db.url}
+  user: ${n12m.db.userid}
+  password: ${n12m.db.password}
+  placeholder: true
+  placeholders.schemaName: ${n12m.db.schema}
+  placeholders.dbUserId: ${n12m.db.userid}
+
+security:
+  basic:
+    enabled: false
+  oauth2:
+    client:
+      client-id: ${n12m.oauth.auth-server-client-id}
+      client-secret: ${n12m.oauth.auth-server-client-secret}
+      access-token-uri: ${n12m.oauth.auth-server-url}/oauth/token
+      user-authorization-uri: ${n12m.oauth.auth-server-url}/oauth/authorize
+    resource:
+      user-info-uri: ${n12m.oauth.auth-server-url}/me
+  sessions: never
