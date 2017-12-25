@@ -1,7 +1,5 @@
 // Tommy Li (tommy.li@firefire.co), 2017-01-16
 
-import co.firefire.n12m.db.RunSqlScriptTask
-
 buildscript {
   repositories {
     mavenLocal()
@@ -66,13 +64,13 @@ dependencies {
 }
 
 def sysProps = [
-  'logging.file'    : project.property('n12m.logging.file'),
-  'logging.path'    : project.property('n12m.logging.path'),
-  'nem12.db.driver'  : project.property('n12m.db.driver'),
-  'nem12.db.schema'  : project.property('n12m.db.schema'),
-  'nem12.db.url'     : project.property('n12m.db.url'),
-  'nem12.db.userid'  : project.property('n12m.db.userid'),
-  'nem12.db.password': project.property('n12m.db.password')
+  'logging.file'       : project.property('fenergy.logging.file'),
+  'logging.path'       : project.property('fenergy.logging.path'),
+  'fenergy.db.driver'  : project.property('fenergy.db.driver'),
+  'fenergy.db.schema'  : project.property('fenergy.db.schema'),
+  'fenergy.db.url'     : project.property('fenergy.db.url'),
+  'fenergy.db.userid'  : project.property('fenergy.db.userid'),
+  'fenergy.db.password': project.property('fenergy.db.password')
 ]
 
 bootRun {

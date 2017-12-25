@@ -1,4 +1,4 @@
-import co.firefire.n12m.db.RunSqlScriptTask
+//import co.firefire.fenergy.db.RunSqlScriptTask
 
 buildscript {
   ext {
@@ -60,6 +60,7 @@ dependencies {
   compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
 
   compile project(":fenergy-nem12")
+  runtime project(":fenergy-db")
 
   testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
   testCompile("org.springframework:spring-test:$springTestVersion")
@@ -90,35 +91,34 @@ appengine {
   }
 }
 
-
-flyway {
-  driver = project.property('n12m.db.driver')
-  schemas = [project.property('n12m.db.schema')]
-  url = project.property('n12m.test.db.url')
-  user = project.property('n12m.test.db.userid')
-  password = project.property('n12m.test.db.password')
-  locations = ["classpath:db/migration"]
-  placeholderReplacement = true
-  placeholders = [
-    'schemaName': project.property('n12m.db.schema'),
-    'dbUserId'  : project.property('n12m.test.db.userid')
-  ]
-}
-
-task setupTestData(type: RunSqlScriptTask) {
-  url = project.property('n12m.test.db.url')
-  userid = project.property('n12m.test.db.userid')
-  password = project.property('n12m.test.db.password')
-  scripts = [
-    'insert_test_data.sql'
-  ]
-}
-
-flywayClean.dependsOn classes
-flywayMigrate.dependsOn classes
-flywayMigrate.dependsOn flywayClean
-setupTestData.dependsOn flywayMigrate
-
+//flyway {
+//  driver = project.property('fenergy.db.driver')
+//  schemas = [project.property('fenergy.db.schema')]
+//  url = project.property('fenergy.test.db.url')
+//  user = project.property('fenergy.test.db.userid')
+//  password = project.property('fenergy.test.db.password')
+//  locations = ["classpath:db/migration"]
+//  placeholderReplacement = true
+//  placeholders = [
+//    'schemaName': project.property('fenergy.db.schema'),
+//    'dbUserId'  : project.property('fenergy.test.db.userid')
+//  ]
+//}
+//
+//task setupTestData(type: RunSqlScriptTask) {
+//  url = project.property('fenergy.test.db.url')
+//  userid = project.property('fenergy.test.db.userid')
+//  password = project.property('fenergy.test.db.password')
+//  scripts = [
+//    'insert_test_data.sql'
+//  ]
+//}
+//
+//flywayClean.dependsOn classes
+//flywayMigrate.dependsOn classes
+//flywayMigrate.dependsOn flywayClean
+//setupTestData.dependsOn flywayMigrate
+//
 test {
   testLogging {
     events 'passed', 'skipped', 'failed', 'standardError'

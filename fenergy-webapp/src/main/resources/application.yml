@@ -50,7 +50,7 @@ security:
 zuul:
 #  ignored-services: '*'
   routes:
-    n12m-api:
+    fenergy-api:
       path: /nem12/**
       url: http://localhost:8081/nem12
       stripPrefix: false
@@ -60,12 +60,12 @@ server:
   context-path: /nem12
   port: 8081
 
-n12m:
+fenergy:
   db:
     driver: org.postgresql.Driver
     schema: nem12
     url: jdbc:postgresql://localhost/test
-    userid: n12mtest
+    userid: fenergytest
     password: password
   oauth:
     auth-server-url: http://localhost:8080
@@ -78,10 +78,10 @@ spring:
   jmx.enabled: false
   datasource:
     type: org.apache.tomcat.jdbc.pool.DataSource
-    driver: class-name=${n12m.db.driver}
-    url: ${n12m.db.url}
-    username: ${n12m.db.userid}
-    password: ${n12m.db.password}
+    driver: class-name=${fenergy.db.driver}
+    url: ${fenergy.db.url}
+    username: ${fenergy.db.userid}
+    password: ${fenergy.db.password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     show-sql: false
@@ -95,24 +95,24 @@ logging:
     org.springframework.security: DEBUG
 
 flyway:
-  driver: ${n12m.db.driver}
-  schemas: ${n12m.db.schema}
-  url: ${n12m.db.url}
-  user: ${n12m.db.userid}
-  password: ${n12m.db.password}
+  driver: ${fenergy.db.driver}
+  schemas: ${fenergy.db.schema}
+  url: ${fenergy.db.url}
+  user: ${fenergy.db.userid}
+  password: ${fenergy.db.password}
   placeholder: true
-  placeholders.schemaName: ${n12m.db.schema}
-  placeholders.dbUserId: ${n12m.db.userid}
+  placeholders.schemaName: ${fenergy.db.schema}
+  placeholders.dbUserId: ${fenergy.db.userid}
 
 security:
   basic:
     enabled: false
   oauth2:
     client:
-      client-id: ${n12m.oauth.auth-server-client-id}
-      client-secret: ${n12m.oauth.auth-server-client-secret}
-      access-token-uri: ${n12m.oauth.auth-server-url}/oauth/token
-      user-authorization-uri: ${n12m.oauth.auth-server-url}/oauth/authorize
+      client-id: ${fenergy.oauth.auth-server-client-id}
+      client-secret: ${fenergy.oauth.auth-server-client-secret}
+      access-token-uri: ${fenergy.oauth.auth-server-url}/oauth/token
+      user-authorization-uri: ${fenergy.oauth.auth-server-url}/oauth/authorize
     resource:
-      user-info-uri: ${n12m.oauth.auth-server-url}/me
+      user-info-uri: ${fenergy.oauth.auth-server-url}/me
   sessions: never

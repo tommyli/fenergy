@@ -1,0 +1,68 @@
+import co.firefire.fenergy.db.RunSqlScriptTask
+
+buildscript {
+  ext {
+    flywayVersion = '5.0.3'
+  }
+  repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+}
+
+plugins {
+  id 'org.flywaydb.flyway' version '5.0.3'
+}
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+description = "Fenergy DB"
+group "co.firefire.fenergy.db"
+
+ext {
+  flywayVersion = '5.0.3'
+  postgresDriverVersion = '42.1.4.jre7'
+}
+
+repositories {
+  mavenLocal()
+  jcenter()
+  mavenCentral()
+}
+
+dependencies {
+  runtime("org.flywaydb:flyway-parent:$flywayVersion")
+  runtime("org.postgresql:postgresql:$postgresDriverVersion")
+}
+
+flyway {
+  driver = project.property('fenergy.db.driver')
+  schemas = [project.property('fenergy.db.schema')]
+  url = project.property('fenergy.test.db.url')
+  user = project.property('fenergy.test.db.userid')
+  password = project.property('fenergy.test.db.password')
+  locations = ["classpath:db/migration"]
+  placeholderReplacement = true
+  placeholders = [
+    'schemaName': project.property('fenergy.db.schema'),
+    'dbUserId'  : project.property('fenergy.test.db.userid')
+  ]
+}
+
+task setupTestData(type: RunSqlScriptTask) {
+  url = project.property('fenergy.test.db.url')
+  userid = project.property('fenergy.test.db.userid')
+  password = project.property('fenergy.test.db.password')
+  scripts = [
+    'insert_test_data.sql'
+  ]
+}
+
+flywayClean.dependsOn classes
+flywayMigrate.dependsOn classes
+flywayMigrate.dependsOn flywayClean
+setupTestData.dependsOn flywayMigrate
