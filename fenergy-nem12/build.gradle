@@ -25,6 +25,7 @@ description = "Fenergy NEM12 module"
 group "co.firefire.fenergy.nem12"
 
 ext {
+  postgresDriverVersion = '42.1.4.jre7'
   spockVersion = '1.1-groovy-2.4'
 }
 
@@ -53,8 +54,7 @@ dependencies {
   compile("org.hibernate:hibernate-entitymanager:+")
   compile("org.hibernate:hibernate-java8:+")
 
-//  runtime("org.flywaydb:flyway-core:$flywayVersion")
-//  runtime("org.postgresql:postgresql:+")
+  runtime("org.postgresql:postgresql:$postgresDriverVersion")
 
   testCompile("org.codehaus.groovy:groovy:+")
   testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
@@ -64,13 +64,13 @@ dependencies {
 }
 
 def sysProps = [
-  'logging.file'       : project.property('fenergy.logging.file'),
-  'logging.path'       : project.property('fenergy.logging.path'),
-  'fenergy.db.driver'  : project.property('fenergy.db.driver'),
-  'fenergy.db.schema'  : project.property('fenergy.db.schema'),
-  'fenergy.db.url'     : project.property('fenergy.db.url'),
-  'fenergy.db.userid'  : project.property('fenergy.db.userid'),
-  'fenergy.db.password': project.property('fenergy.db.password')
+  'logging.file'            : project.property('fenergy.logging.file'),
+  'logging.path'            : project.property('fenergy.logging.path'),
+  'fenergy.db.driver'       : project.property('fenergy.db.driver'),
+  'fenergy.db.schema'       : project.property('fenergy.db.schema'),
+  'fenergy.test.db.url'     : project.property('fenergy.test.db.url'),
+  'fenergy.test.db.userid'  : project.property('fenergy.test.db.userid'),
+  'fenergy.test.db.password': project.property('fenergy.test.db.password')
 ]
 
 bootRun {
@@ -78,7 +78,8 @@ bootRun {
   systemProperties = sysProps
 }
 
-[bootRun, test].each { task ->
+[test].each { task ->
+  sysProps['spring.profiles.active'] = 'test'
   configure(task) {
     systemProperties = sysProps
   }

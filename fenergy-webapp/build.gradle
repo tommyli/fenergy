@@ -1,9 +1,6 @@
 //import co.firefire.fenergy.db.RunSqlScriptTask
 
 buildscript {
-  ext {
-    flywayVersion = '4.2.0'
-  }
   repositories {
     mavenLocal()
     jcenter()
@@ -15,9 +12,7 @@ buildscript {
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
     classpath("com.google.cloud.tools:appengine-gradle-plugin:+")
-    classpath "gradle.plugin.com.boxfuse.client:flyway-release:$flywayVersion"
     classpath("com.moowork.gradle:gradle-node-plugin:+")
-    classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
   }
 }
@@ -26,18 +21,16 @@ plugins {
   id 'org.springframework.boot' version '1.5.7.RELEASE'
 }
 apply plugin: 'groovy'
-apply plugin:'java'
+apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'com.moowork.node'
-apply plugin: 'org.flywaydb.flyway'
 
 description = "Fenergy Web Application Server"
 group "co.firefire.fenergy.webapp"
 
 ext {
-  flywayVersion = '4.2.0'
-  postgresDriverVersion = '42.1.1.jre7'
+  postgresDriverVersion = '42.1.4.jre7'
   spockVersion = '1.1-groovy-2.4'
 }
 
@@ -59,8 +52,8 @@ dependencies {
   compile("org.springframework.cloud:spring-cloud-starter-zuul:$springCloudZuulVersion")
   compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
 
-  compile project(":fenergy-nem12")
   runtime project(":fenergy-db")
+  compile project(":fenergy-nem12")
 
   testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
   testCompile("org.springframework:spring-test:$springTestVersion")
@@ -91,34 +84,6 @@ appengine {
   }
 }
 
-//flyway {
-//  driver = project.property('fenergy.db.driver')
-//  schemas = [project.property('fenergy.db.schema')]
-//  url = project.property('fenergy.test.db.url')
-//  user = project.property('fenergy.test.db.userid')
-//  password = project.property('fenergy.test.db.password')
-//  locations = ["classpath:db/migration"]
-//  placeholderReplacement = true
-//  placeholders = [
-//    'schemaName': project.property('fenergy.db.schema'),
-//    'dbUserId'  : project.property('fenergy.test.db.userid')
-//  ]
-//}
-//
-//task setupTestData(type: RunSqlScriptTask) {
-//  url = project.property('fenergy.test.db.url')
-//  userid = project.property('fenergy.test.db.userid')
-//  password = project.property('fenergy.test.db.password')
-//  scripts = [
-//    'insert_test_data.sql'
-//  ]
-//}
-//
-//flywayClean.dependsOn classes
-//flywayMigrate.dependsOn classes
-//flywayMigrate.dependsOn flywayClean
-//setupTestData.dependsOn flywayMigrate
-//
 test {
   testLogging {
     events 'passed', 'skipped', 'failed', 'standardError'

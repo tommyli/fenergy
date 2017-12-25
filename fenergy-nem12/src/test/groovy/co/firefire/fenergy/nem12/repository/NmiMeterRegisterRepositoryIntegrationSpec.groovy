@@ -11,6 +11,7 @@ import co.firefire.fenergy.nem12.domain.IntervalValue
 import co.firefire.fenergy.nem12.domain.LoginNmi
 import co.firefire.fenergy.nem12.domain.NmiMeterRegister
 import co.firefire.fenergy.nem12.domain.Quality
+import co.firefire.fenergy.nem12.domain.UnitOfMeasure
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
