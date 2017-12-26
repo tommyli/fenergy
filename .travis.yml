@@ -28,10 +28,10 @@ cache:
     - $HOME/fenergy-ui/node_modules
 
 before_script:
-  - psql -f n12m-api/src/main/resources/db/setup_db.sql -U postgres
+  - psql -f fenergy-db/src/main/resources/db/setup_db.sql -U postgres
 
 #before_install:
 #  - npm i -g npm@5.3.0
   
 script:
-  - ./gradlew setupTestData build
+  - ./gradlew fenergy-db:setupTestData build
