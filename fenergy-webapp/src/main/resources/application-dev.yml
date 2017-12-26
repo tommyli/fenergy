@@ -4,22 +4,3 @@ security:
 management:
   security:
     enabled: false
-
-n12m:
-  db:
-    driver: org.postgresql.Driver
-    schema: nem12
-    url: jdbc:postgresql://localhost/test
-    userid: n12mtest
-    password: password
-  oauth:
-    auth-server-url: http://localhost
-    auth-server-client-id: fenergy-client
-    auth-server-client-secret: fenergy-client-secret
-
-security:
-  ignored: /**
-
-management:
-  security:
-    enabled: false

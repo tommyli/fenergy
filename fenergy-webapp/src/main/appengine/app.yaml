@@ -23,8 +23,8 @@ health_check:
   healthy_threshold: 2
 
 env_variables:
-  n12m_db_driver: org.postgresql.Driver
-  n12m_db_schema: nem12
-  n12m_db_url: jdbc:postgresql://db.firefire.co/test
-  n12m_db_userid: n12mtest
-  n12m_db_password: gcpn12mtest
+  fenergy_db_driver: org.postgresql.Driver
+  fenergy_db_schema: fenergy
+  fenergy_db_url: jdbc:postgresql://localhost/fenergytest
+  fenergy_db_userid: fenergytest
+  fenergy_db_password: fenergytest_password

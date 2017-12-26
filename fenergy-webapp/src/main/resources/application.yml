@@ -2,20 +2,61 @@ server:
   context-path: /
   port: 8080
 
-spring:
-  jmx.enabled: false
-
 logging:
-  file: fenergy.api.log
+  file: fenergy.log
   path: /tmp/log/fenergy
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: INFO
 
 fenergy:
+  db:
+    driver: org.postgresql.Driver
+    schema: fenergy
+    url: jdbc:postgresql://localhost/fenergytest
+    userid: fenergytest
+    password: fenergytest_password
   oauth:
     client-id: fenergy-client-id
     client-secret: fenergy-client-secret
-    
+
+flyway:
+  driver: ${fenergy.db.driver}
+  schemas: ${fenergy.db.schema}
+  url: ${fenergy.db.url}
+  user: ${fenergy.db.userid}
+  password: ${fenergy.db.password}
+  placeholder: true
+  placeholders.schemaName: ${fenergy.db.schema}
+  placeholders.dbUserId: ${fenergy.db.userid}
+
+spring:
+  application:
+    name: fenergy
+  jmx.enabled: false
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    driver: class-name=${fenergy.db.driver}
+    url: ${fenergy.db.url}
+    username: ${fenergy.db.userid}
+    password: ${fenergy.db.password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate.ddl-auto: none
+    generate-ddl: false
+
+security:
+  oauth2:
+    client:
+      client-id: ${fenergy.oauth.client-id}
+      client-secret: ${fenergy.oauth.client-secret}
+      scope: read,write
+      auto-approve-scopes: '.*'
+      grant-types: authorization_code
+  basic:
+    enabled: false
+  sessions: never
+
 google:
   client:
     clientId: ${fenergy.oauth.google.client.id}
@@ -35,84 +76,9 @@ github:
   resource:
     userInfoUri: https://api.github.com/user
 
-security:
-  oauth2:
-    client:
-      client-id: ${fenergy.oauth.client-id}
-      client-secret: ${fenergy.oauth.client-secret}
-      scope: read,write
-      auto-approve-scopes: '.*'
-      grant-types: authorization_code
-  basic:
-    enabled: false
-  sessions: never
-
 zuul:
-#  ignored-services: '*'
   routes:
-    fenergy-api:
-      path: /nem12/**
-      url: http://localhost:8081/nem12
+    fenergy:
+      path: /fenergy/**
+      url: http://localhost:8080/fenergy
       stripPrefix: false
-
-
-server:
-  context-path: /nem12
-  port: 8081
-
-fenergy:
-  db:
-    driver: org.postgresql.Driver
-    schema: nem12
-    url: jdbc:postgresql://localhost/test
-    userid: fenergytest
-    password: password
-  oauth:
-    auth-server-url: http://localhost:8080
-    auth-server-client-id: fenergy-client-id
-    auth-server-client-secret: fenergy-client-secret
-
-spring:
-  application:
-    name: nem12-api
-  jmx.enabled: false
-  datasource:
-    type: org.apache.tomcat.jdbc.pool.DataSource
-    driver: class-name=${fenergy.db.driver}
-    url: ${fenergy.db.url}
-    username: ${fenergy.db.userid}
-    password: ${fenergy.db.password}
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: false
-    hibernate.ddl-auto: none
-    generate-ddl: false
-
-logging:
-  file: nm12.api.log
-  path: /tmp/log/nem12
-  level:
-    org.springframework.security: DEBUG
-
-flyway:
-  driver: ${fenergy.db.driver}
-  schemas: ${fenergy.db.schema}
-  url: ${fenergy.db.url}
-  user: ${fenergy.db.userid}
-  password: ${fenergy.db.password}
-  placeholder: true
-  placeholders.schemaName: ${fenergy.db.schema}
-  placeholders.dbUserId: ${fenergy.db.userid}
-
-security:
-  basic:
-    enabled: false
-  oauth2:
-    client:
-      client-id: ${fenergy.oauth.auth-server-client-id}
-      client-secret: ${fenergy.oauth.auth-server-client-secret}
-      access-token-uri: ${fenergy.oauth.auth-server-url}/oauth/token
-      user-authorization-uri: ${fenergy.oauth.auth-server-url}/oauth/authorize
-    resource:
-      user-info-uri: ${fenergy.oauth.auth-server-url}/me
-  sessions: never

@@ -30,6 +30,7 @@ description = "Fenergy Web Application Server"
 group "co.firefire.fenergy.webapp"
 
 ext {
+  flywayVersion = '5.0.3'
   postgresDriverVersion = '42.1.4.jre7'
   spockVersion = '1.1-groovy-2.4'
 }
@@ -53,6 +54,7 @@ dependencies {
   compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
 
   runtime project(":fenergy-db")
+  runtime "org.flywaydb:flyway-core:$flywayVersion"
   compile project(":fenergy-nem12")
 
   testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
@@ -62,8 +64,13 @@ dependencies {
 }
 
 def sysProps = [
-  'logging.file': project.property('fenergy.logging.file'),
-  'logging.path': project.property('fenergy.logging.path'),
+  'logging.file'       : project.property('fenergy.logging.file'),
+  'logging.path'       : project.property('fenergy.logging.path'),
+  'fenergy.db.driver'  : project.property('fenergy.db.driver'),
+  'fenergy.db.schema'  : project.property('fenergy.db.schema'),
+  'fenergy.db.url'     : project.property('fenergy.db.url'),
+  'fenergy.db.userid'  : project.property('fenergy.db.userid'),
+  'fenergy.db.password': project.property('fenergy.db.password')
 ]
 
 bootRun {

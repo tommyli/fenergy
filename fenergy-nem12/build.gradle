@@ -64,10 +64,10 @@ dependencies {
 }
 
 def sysProps = [
-  'logging.file'            : project.property('fenergy.logging.file'),
-  'logging.path'            : project.property('fenergy.logging.path'),
-  'fenergy.db.driver'       : project.property('fenergy.db.driver'),
-  'fenergy.db.schema'       : project.property('fenergy.db.schema'),
+  'logging.file'          : project.property('fenergy.logging.file'),
+  'logging.path'          : project.property('fenergy.logging.path'),
+  'fenergy.db.driver'     : project.property('fenergy.db.driver'),
+  'fenergy.db.schema'     : project.property('fenergy.db.schema'),
   'fenergy.test.db.url'     : project.property('fenergy.test.db.url'),
   'fenergy.test.db.userid'  : project.property('fenergy.test.db.userid'),
   'fenergy.test.db.password': project.property('fenergy.test.db.password')
@@ -79,7 +79,7 @@ bootRun {
 }
 
 [test].each { task ->
-  sysProps['spring.profiles.active'] = 'test'
+  sysProps['spring.profiles.active'] = 'ci'
   configure(task) {
     systemProperties = sysProps
   }
