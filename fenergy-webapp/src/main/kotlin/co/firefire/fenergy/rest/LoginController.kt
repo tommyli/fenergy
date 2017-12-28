@@ -1,6 +1,6 @@
 // Tommy Li (tommy.li@firefire.co), 2017-06-29
 
-package co.firefire.fenergy.nem12.rest
+package co.firefire.fenergy.rest
 
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -21,9 +21,9 @@ class LoginController {
                 if (details is Map<*, *>) {
                     result.plus(mapOf(
                             "email" to details["email"] as String,
-                            "givenName" to details["givenName"] as String,
-                            "familyName" to details["familyName"] as String,
-                            "pictureUrl" to details["pictureUrl"] as String,
+                            "givenName" to details["given_name"] as String,
+                            "familyName" to details["family_name"] as String,
+                            "pictureUrl" to details["picture"] as String,
                             "locale" to details["locale"] as String
                     ))
                 } else {

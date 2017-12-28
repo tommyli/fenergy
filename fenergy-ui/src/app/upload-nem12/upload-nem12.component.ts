@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MD_DIALOG_DATA, MdDialogRef} from '@angular/material';
-import {Observable} from "rxjs/Observable";
-import {HttpClient} from "@angular/common/http";
+import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
              selector: 'app-upload-nem12',
@@ -32,10 +32,9 @@ export class UploadNem12Component implements OnInit {
       const headers = new Headers();
 
       /** No need to include Content-Type in Angular 4 */
-      // headers.append('Content-Type', 'multipart/form-data');
-      // headers.append('Accept', 'application/json');
-      // const options = new RequestOptions({headers: headers});
-      this.http.get(`/n12m/getUpload`)
+      headers.append('Content-Type', 'multipart/form-data');
+      headers.append('Accept', 'application/json');
+      this.http.post(`/upload`, formData)
         .map(res =>
                console.log(JSON.stringify(res))
         )
@@ -44,15 +43,6 @@ export class UploadNem12Component implements OnInit {
           data => console.log('success'),
           error => console.log(error)
         );
-      // this.http.post(`/api/postUpload`, formData)
-      //   .map(res =>
-      //          console.log(JSON.stringify(res))
-      //   )
-      //   .catch(error => Observable.throw(error))
-      //   .subscribe(
-      //     data => console.log('success'),
-      //     error => console.log(error)
-      //   );
     }
   }
 

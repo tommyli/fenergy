@@ -4,7 +4,7 @@
     "secure": false,
     "logLevel": "debug"
   },
-  "/n12m": {
+  "/": {
     "target": "http://localhost:8080",
     "secure": false,
     "logLevel": "debug"

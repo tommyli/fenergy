@@ -41,7 +41,7 @@ spring:
     password: ${fenergy.db.password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: false
+    show-sql: true
     hibernate.ddl-auto: none
     generate-ddl: false
 
@@ -55,7 +55,7 @@ security:
       grant-types: authorization_code
   basic:
     enabled: false
-  sessions: never
+#  sessions: never
 
 google:
   client:
@@ -76,9 +76,9 @@ github:
   resource:
     userInfoUri: https://api.github.com/user
 
-zuul:
-  routes:
-    fenergy:
-      path: /fenergy/**
-      url: http://localhost:8080/fenergy
-      stripPrefix: false
+#zuul:
+#  routes:
+#    fenergy:
+#      path: /fenergy/**
+#      url: http://localhost:8080/fenergy
+#      stripPrefix: false

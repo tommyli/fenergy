@@ -1,4 +1,4 @@
-package co.firefire.fenergy;// Tommy Li (tommy.li@firefire.co), 2017-07-28
+package co.firefire.fenergy.rest;// Tommy Li (tommy.li@firefire.co), 2017-07-28
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -52,9 +52,9 @@ public class AuthController {
 
     Map<String, String> result = new HashMap<>();
     result.put("email", authDetails.get("email"));
-    result.put("givenName", authDetails.get("given_name"));
-    result.put("familyName", authDetails.get("family_name"));
-    result.put("pictureUrl", authDetails.get("picture"));
+    result.put("given_name", authDetails.get("given_name"));
+    result.put("family_name", authDetails.get("family_name"));
+    result.put("picture", authDetails.get("picture"));
     result.put("locale", authDetails.get("locale"));
 
     return result;
