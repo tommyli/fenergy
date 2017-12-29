@@ -7,6 +7,7 @@ import co.firefire.fenergy.nem12.domain.LoginNmi
 import co.firefire.fenergy.nem12.repository.LoginNmiRepository
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 interface Nem12Service {
 
@@ -14,6 +15,7 @@ interface Nem12Service {
 
 }
 
+@Transactional
 @Service
 class Nem12ServiceImpl(val loginNmiRepo: LoginNmiRepository) : Nem12Service {
 
