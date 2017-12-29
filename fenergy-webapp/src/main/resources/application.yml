@@ -41,7 +41,7 @@ spring:
     password: ${fenergy.db.password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: false
+    show-sql: true
     generate-ddl: false
     properties:
       hibernate:

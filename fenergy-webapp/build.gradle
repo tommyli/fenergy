@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-  id 'org.springframework.boot' version '1.5.7.RELEASE'
+  id 'org.springframework.boot' version '1.5.9.RELEASE'
 }
 apply plugin: 'groovy'
 apply plugin: 'java'
