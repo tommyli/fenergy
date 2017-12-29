@@ -25,6 +25,8 @@ description = "Fenergy NEM12 module"
 group "co.firefire.fenergy.nem12"
 
 ext {
+  ehcacheCoreVersion = '2.10.4'
+  hibernateVersion = '5.2.12.Final'
   postgresDriverVersion = '42.1.4.jre7'
   spockVersion = '1.1-groovy-2.4'
 }
@@ -52,7 +54,11 @@ dependencies {
 
   compile("org.jetbrains.kotlin:kotlin-stdlib:+")
   compile("org.hibernate:hibernate-entitymanager:+")
+  compile("org.hibernate:hibernate-ehcache:$hibernateVersion") {
+    exclude module: 'ehcache-core'
+  }
   compile("org.hibernate:hibernate-java8:+")
+  compile "net.sf.ehcache.internal:ehcache-core:$ehcacheCoreVersion"
 
   runtime("org.postgresql:postgresql:$postgresDriverVersion")
 

@@ -41,9 +41,23 @@ spring:
     password: ${fenergy.db.password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: true
-    hibernate.ddl-auto: none
+    show-sql: false
     generate-ddl: false
+    properties:
+      hibernate:
+        cache:
+          region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+          use_query_cache: true
+          use_reference_entries: true
+          use_second_level_cache: true
+          use_structured_entries: true
+        ddl-auto: none
+        jdbc:
+          batch_size: 500
+          batch_versioned_data: true
+          fetch_size: 200
+        order_inserts: true
+        order_updates: true
 
 security:
   oauth2:
