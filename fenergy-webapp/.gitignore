@@ -1,3 +1,2 @@
 src/main/resources/static/*
-!index.html
-!home.html
+!src/main/resources/static/index.html
