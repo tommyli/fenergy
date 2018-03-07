@@ -46,7 +46,6 @@ const Main = ({ notifications }) => {
 
 Main.propTypes = {
   notifications: PropTypes.array,
-  brand: PropTypes.string
 };
 
 export default Main;

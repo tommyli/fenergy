@@ -9,6 +9,10 @@ import 'typeface-roboto'
 import Progress from './Progress'
 import classNames from 'classnames';
 import './Main.css';
+import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
+import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
+import faInfoCircle from '@fortawesome/fontawesome-free-solid/faInfoCircle'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 const NavBar = ({ progressHidden, actions }) => {
   return (
@@ -28,7 +32,15 @@ const NavBar = ({ progressHidden, actions }) => {
             </Grid>
           </Grid>
           <Grid item>
-            <IconButton color="inherit"><i alt="Switch Brands" className="material-icons md-36" onClick={actions.healthCheck}>info</i></IconButton>
+            <IconButton color="inherit">
+              <FontAwesomeIcon icon={faInfoCircle} onClick={actions.healthCheck}/>
+            </IconButton>
+            <IconButton color="inherit">
+              <FontAwesomeIcon icon={faGoogle} onClick={actions.healthCheck}/>
+            </IconButton>
+            <IconButton color="inherit">
+              <FontAwesomeIcon icon={faSignOutAlt} onClick={actions.healthCheck}/>
+            </IconButton>
           </Grid>
         </Grid>
       </Toolbar>
