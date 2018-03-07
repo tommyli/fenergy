@@ -1,16 +1,52 @@
 {
   "name": "fenergy-ui",
   "version": "0.1.0",
+  "description": "FENERGY",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tommyli/fenergy.git"
+  },
+  "keywords": [
+    "fenergy",
+    "energy",
+    "solar",
+    "battery",
+    "NEM12"
+  ],
+  "author": "Tommy Li",
+  "homepage": "https://github.com/tommyli/fenergy",
+  "proxy": "http://localhost:8083",
   "dependencies": {
+    "@devexpress/dx-react-core": "^1.0.0",
+    "@devexpress/dx-react-grid": "^1.0.0",
+    "@devexpress/dx-react-grid-material-ui": "^1.0.0",
+    "axios": "^0.17.1",
+    "environs": "^0.4.5",
+    "material-design-icons": "^3.0.1",
+    "material-ui": "^1.0.0-beta.32",
+    "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+    "react-notification-system": "^0.2.16",
+    "react-notification-system-redux": "^1.2.0",
+    "react-redux": "^5.0.6",
+    "react-redux-form": "^1.16.5",
+    "react-scripts": "1.1.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "typeface-roboto": "0.0.50"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "react-test-renderer": "^16.2.0",
+    "redux-devtools": "^3.4.1",
+    "redux-devtools-extension": "^2.13.2"
   }
 }
