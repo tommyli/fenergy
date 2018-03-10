@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Grid from "material-ui/Grid";
 import Paper from "material-ui/Paper";
@@ -15,37 +15,47 @@ import { DEFAULT_THEME, NOTIFICATION } from '../shared/constants';
 // lg, large: 1280px or larger
 // xl, xlarge: 1920px or larger
 
-const Main = ({ notifications }) => {
+class Main extends Component {
 
-  return (
-    <div className="main">
-      <Notifications notifications={notifications} style={NOTIFICATION.STYLE} />
-      <Reboot />
-      <MuiThemeProvider theme={DEFAULT_THEME}>
-        <NavBar />
-        <Paper>
+  static propTypes = {
+    notifications: PropTypes.array,
+    actions: PropTypes.shape({
+      getUser: PropTypes.func
+    })
+  };
 
-          <Grid id="grid-mainBody" container justify={"center"} alignContent={"center"} alignItems={"center"} direction={"row"} spacing={8}>
+  componentDidMount() {
+    // console.log(JSON.stringify(this.props.actions.getUser()));
+    this.props.actions.getUser()
+    // console.log('componentDidMount');
+  }
 
-            <Grid id="grid-search" item xs={12} sm={11} md={10} lg={9} xl={8}>
-              <div>top</div>
+  render() {
+    return (
+      <div className="main">
+        <Notifications notifications={this.props.notifications} style={NOTIFICATION.STYLE} />
+        <Reboot />
+        <MuiThemeProvider theme={DEFAULT_THEME}>
+          <NavBar />
+          <Paper>
+
+            <Grid id="grid-mainBody" container justify={"center"} alignContent={"center"} alignItems={"center"} direction={"row"} spacing={8}>
+
+              <Grid id="grid-search" item xs={12} sm={11} md={10} lg={9} xl={8}>
+                <div>top</div>
+              </Grid>
+
+              <Grid id="grid-result" item xs={12} sm={11} md={10} lg={9} xl={8}>
+                <div>bottom</div>
+              </Grid>
+
             </Grid>
 
-            <Grid id="grid-result" item xs={12} sm={11} md={10} lg={9} xl={8}>
-              <div>bottom</div>
-            </Grid>
-
-          </Grid>
-
-        </Paper>
-      </MuiThemeProvider>
-    </div>
-
-  );
-};
-
-Main.propTypes = {
-  notifications: PropTypes.array,
-};
+          </Paper>
+        </MuiThemeProvider>
+      </div>
+    );
+  }
+}
 
 export default Main;

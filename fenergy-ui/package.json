@@ -8,6 +8,7 @@
     "url": "git@github.com:tommyli/fenergy.git"
   },
   "keywords": [
+    "firefire",
     "fenergy",
     "energy",
     "solar",
@@ -15,12 +16,23 @@
     "NEM12"
   ],
   "author": "Tommy Li",
-  "homepage": "https://github.com/tommyli/fenergy",
-  "proxy": "http://localhost:8083",
+  "homepage": "https://fenergy.firefire.co/fenergy",
+  "proxy": {
+    "/auth": {
+      "target": "http://localhost:8080",
+      "secure": false,
+      "logLevel": "debug"
+    },
+    "/": {
+      "target": "http://localhost:8080",
+      "secure": false,
+      "logLevel": "debug"
+    }
+  },
   "dependencies": {
-    "@devexpress/dx-react-core": "^1.0.0",
-    "@devexpress/dx-react-grid": "^1.0.0",
-    "@devexpress/dx-react-grid-material-ui": "^1.0.0",
+    "@devexpress/dx-react-core": "^1.0.3",
+    "@devexpress/dx-react-grid": "^1.0.3",
+    "@devexpress/dx-react-grid-material-ui": "^1.0.3",
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-free-brands": "^5.0.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
@@ -28,7 +40,7 @@
     "axios": "^0.17.1",
     "environs": "^0.4.5",
     "material-design-icons": "^3.0.1",
-    "material-ui": "^1.0.0-beta.32",
+    "material-ui": "1.0.0-beta.34",
     "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

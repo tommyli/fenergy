@@ -1,23 +1,33 @@
 import initialState from '../store/initialState';
-import * as types from '../actions/actionTypes';
+import { APP_ACTIONS, USER_ACTIONS } from '../actions/actionTypes';
 
 export function app(state = initialState.app, action) {
 
   switch (action.type) {
 
-    case types.APP_ACTIONS.LOADING: {
+    case APP_ACTIONS.LOADING: {
       let newState = Object.assign({}, state)
       newState.loading = true;
       return newState;
     }
-    case types.APP_ACTIONS.LOADED: {
+    case APP_ACTIONS.LOADED: {
       let newState = Object.assign({}, state)
       newState.loading = false;
       return newState;
     }
-    case types.APP_ACTIONS.ERROR: {
+    case APP_ACTIONS.ERROR: {
       let newState = Object.assign({}, state)
       newState.error = action.error
+      return newState;
+    }
+    case USER_ACTIONS.GET_USER: {
+      let newState = Object.assign({}, state)
+      newState.authenticated = true
+      return newState;
+    }
+    case USER_ACTIONS.SIGN_OUT: {
+      let newState = Object.assign({}, state)
+      newState.authenticated = false
       return newState;
     }
 

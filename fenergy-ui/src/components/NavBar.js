@@ -7,12 +7,10 @@ import Grid from "material-ui/Grid";
 import PropTypes from 'prop-types';
 import 'typeface-roboto'
 import Progress from './Progress'
-import classNames from 'classnames';
 import './Main.css';
-import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
-import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import faInfoCircle from '@fortawesome/fontawesome-free-solid/faInfoCircle'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import SignIn from '../containers/SignInContainer';
 
 const NavBar = ({ progressHidden, actions }) => {
   return (
@@ -32,14 +30,9 @@ const NavBar = ({ progressHidden, actions }) => {
             </Grid>
           </Grid>
           <Grid item>
+            <SignIn />
             <IconButton color="inherit">
               <FontAwesomeIcon icon={faInfoCircle} onClick={actions.healthCheck}/>
-            </IconButton>
-            <IconButton color="inherit">
-              <FontAwesomeIcon icon={faGoogle} onClick={actions.healthCheck}/>
-            </IconButton>
-            <IconButton color="inherit">
-              <FontAwesomeIcon icon={faSignOutAlt} onClick={actions.healthCheck}/>
             </IconButton>
           </Grid>
         </Grid>
