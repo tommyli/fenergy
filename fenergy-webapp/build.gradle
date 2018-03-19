@@ -30,9 +30,8 @@ description = "Fenergy Web Application Server"
 group "co.firefire.fenergy.webapp"
 
 ext {
-  flywayVersion = '5.0.3'
+  flywayVersion = '5.0.7'
   postgresDriverVersion = '42.1.4.jre7'
-  spockVersion = '1.1-groovy-2.4'
 }
 
 repositories {
@@ -59,8 +58,12 @@ dependencies {
 
   testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
   testCompile("org.springframework:spring-test:$springTestVersion")
-  testCompile("org.spockframework:spock-core:$spockVersion")
-  testCompile("org.spockframework:spock-spring:$spockVersion")
+  testCompile("org.spockframework:spock-core:$spockVersion") {
+    exclude module: 'groovy-all'
+  }
+  testCompile("org.spockframework:spock-spring:$spockVersion") {
+    exclude module: 'groovy-all'
+  }
 }
 
 def sysProps = [

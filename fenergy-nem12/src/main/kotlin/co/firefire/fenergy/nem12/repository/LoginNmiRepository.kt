@@ -14,4 +14,6 @@ interface LoginNmiRepository : PagingAndSortingRepository<LoginNmi, Long> {
 
     fun findByLoginAndNmi(login: Login, nmi: String): LoginNmi?
 
+    fun findAllByLogin(login: Login): Collection<LoginNmi>
+
 }

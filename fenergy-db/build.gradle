@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-  id 'org.flywaydb.flyway' version '5.0.3'
+  id 'org.flywaydb.flyway' version '5.0.7'
 }
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -24,8 +24,8 @@ description = "Fenergy DB"
 group "co.firefire.fenergy.db"
 
 ext {
-  flywayVersion = '5.0.3'
-  postgresDriverVersion = '42.1.4.jre7'
+  flywayVersion = '5.0.7'
+  postgresDriverVersion = '42.2.2.jre7'
 }
 
 repositories {

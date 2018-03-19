@@ -12,3 +12,4 @@ build/
 *.log
 n12m-api/src/main/appengine/app.yaml
 out
+.vscode
