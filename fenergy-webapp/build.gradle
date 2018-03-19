@@ -1,5 +1,3 @@
-//import co.firefire.fenergy.db.RunSqlScriptTask
-
 buildscript {
   repositories {
     mavenLocal()
@@ -12,19 +10,17 @@ buildscript {
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
     classpath("com.google.cloud.tools:appengine-gradle-plugin:+")
-    classpath("com.moowork.gradle:gradle-node-plugin:+")
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
   }
 }
 
 plugins {
-  id 'org.springframework.boot' version '1.5.9.RELEASE'
+  id 'org.springframework.boot' version '1.5.10.RELEASE'
 }
 apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'com.google.cloud.tools.appengine'
-apply plugin: 'com.moowork.node'
 
 description = "Fenergy Web Application Server"
 group "co.firefire.fenergy.webapp"
@@ -102,36 +98,16 @@ test {
   }
 }
 
-node {
-  version = "6.9.1"
-  npmVersion = "5.3.0"
-  download = false
-  nodeModulesDir = file("${project(':fenergy-ui').projectDir}")
+task copyClientResources(dependsOn: ':fenergy-ui:buildClient') {
+  group = 'build'
+  description = 'Copy client resources into server webapp build'
+  doLast {
+    copy {
+      from "${project(':fenergy-ui').buildDir}"
+      into "${project(':fenergy-webapp').buildDir}/resources/main/public"
+    }
+  }
 }
 
-task clientStart(type: NpmTask, dependsOn: 'npmInstall') {
-  group = 'Angular CLI Client Tasks'
-  description = 'Build client for development'
-  args = ['run', 'start']
-}
-
-task clientBuild(type: NpmTask, dependsOn: 'npmInstall') {
-  group = 'Angular CLI Client Tasks'
-  description = 'Build client for development'
-  args = ['run', 'build']
-}
-
-task clientTest(type: NpmTask, dependsOn: 'npmInstall') {
-  group = 'Angular CLI Client Tasks'
-  description = "Run client tests"
-  args = ['run', 'test']
-}
-
-task clientBuildProd(type: NpmTask, dependsOn: 'npmInstall') {
-  group = 'Angular CLI Client Tasks'
-  description = 'Build client for production'
-  args = ['run', 'buildProd']
-}
-
-bootRun.dependsOn(clientBuild)
-//jar.dependsOn(clientBuildProd)
+assemble.dependsOn copyClientResources
+check.dependsOn ':fenergy-ui:test'
