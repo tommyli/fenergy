@@ -1,18 +1,18 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import Typography from "material-ui/Typography";
-import Grid from "material-ui/Grid";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 import PropTypes from 'prop-types';
 import 'typeface-roboto'
 import Progress from './Progress'
 import './Main.css';
-import faInfoCircle from '@fortawesome/fontawesome-free-solid/faInfoCircle'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faInfoCircle from '@fortawesome/fontawesome-free'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import SignIn from '../containers/SignInContainer';
 
-const NavBar = ({ progressHidden, actions }) => {
+const NavBar = ({progressHidden, actions}) => {
   return (
 
     <AppBar color="primary">
@@ -25,12 +25,12 @@ const NavBar = ({ progressHidden, actions }) => {
                 <Typography variant="title" color="inherit">FENERGY</Typography>
               </Grid>
               <Grid item>
-                <Progress hidden={progressHidden} />
+                <Progress hidden={progressHidden}/>
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <SignIn />
+            <SignIn/>
             <IconButton color="inherit">
               <FontAwesomeIcon icon={faInfoCircle} onClick={actions.healthCheck}/>
             </IconButton>

@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Grid from "material-ui/Grid";
-import Paper from "material-ui/Paper";
+import React, {Component} from 'react';
+import {MuiThemeProvider} from '@material-ui/core/styles';
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import 'typeface-roboto'
-import Reboot from 'material-ui/Reboot';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import NavBar from "../containers/NavBarContainer";
 import PropTypes from 'prop-types';
 import Notifications from 'react-notification-system-redux';
-import { DEFAULT_THEME, NOTIFICATION } from '../shared/constants';
+import {DEFAULT_THEME, NOTIFICATION} from '../shared/constants';
 
 // xs, extra-small: 0px or larger
 // sm, small: 600px or larger
@@ -26,18 +26,18 @@ class Main extends Component {
 
   componentDidMount() {
     // console.log(JSON.stringify(this.props.actions.getUser()));
-    this.props.actions.getUser()
+    // this.props.actions.getUser()
     // console.log('componentDidMount');
   }
 
   render() {
     return (
       <div className="main">
-        <Notifications notifications={this.props.notifications} style={NOTIFICATION.STYLE} />
-        <Reboot />
+        <Notifications notifications={this.props.notifications} style={NOTIFICATION.STYLE}/>
+        <CssBaseline/>
         <MuiThemeProvider theme={DEFAULT_THEME}>
-          <NavBar />
-          <Paper>
+          <NavBar/>
+          <Paper elevation={0}>
 
             <Grid id="grid-mainBody" container justify={"center"} alignContent={"center"} alignItems={"center"} direction={"row"} spacing={8}>
 

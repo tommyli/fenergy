@@ -1,12 +1,10 @@
+// Tommy Li (tommy.li@firefire.co), 2018-12-03
+
 buildscript {
   ext {
-    spockVersion = '1.1-groovy-2.4'
-    kotlinVersion = '1.2.30'
-    groovyVersion = '2.4.14'
-    springBootVersion = '1.5.10.RELEASE'
-    springCloudZuulVersion = '1.4.3.RELEASE'
-    springSecurityOAuth2Version = '2.3.0.RELEASE'
-    springTestVersion = '4.3.14.RELEASE'
+    gradleNodePluginVersion = '1.2.0'
+    springBootVersion = '2.1.1.RELEASE'
+    flywayVersion = '5.2.4'
   }
   repositories {
     mavenLocal()
@@ -16,17 +14,73 @@ buildscript {
       url "https://plugins.gradle.org/m2/"
     }
   }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    classpath "com.moowork.gradle:gradle-node-plugin:$gradleNodePluginVersion"
+    classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:+"
+    classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:$flywayVersion"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
+    classpath "org.jetbrains.kotlin:kotlin-allopen:+"
+    classpath "com.google.cloud.tools:appengine-gradle-plugin:+"
+  }
 }
 
-wrapper {
-  gradleVersion = "$gradleWrapperVersion"
+allprojects {
+  version "0.1.0"
+  group 'co.firefire'
+  apply plugin: 'groovy'
+  apply plugin: 'java'
+
+  sourceCompatibility = 1.8
 }
 
-version "0.1.0"
-group "co.firefire.fenergy"
+subprojects {
 
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
+  ext {
+    cglibVersion = '3.2.5'
+    postgresDriverVersion = '42.2.5'
+    flywayVersion = '5.2.4'
+    groovyVersion = '2.5.4'
+    h2Version = '1.4.197'
+    hikariVersion = '2.7.9'
+    kotlinVersion = '1.3.11'
+    spockVersion = '1.2-groovy-2.4'
+    springBootVersion = '2.1.1.RELEASE'
+  }
+
+  repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+  }
+
+  dependencies {
+    implementation("org.codehaus.groovy:groovy:$groovyVersion")
+    implementation("org.codehaus.groovy:groovy-xml:$groovyVersion")
+
+    testImplementation("org.codehaus.groovy:groovy-sql:$groovyVersion")
+    testImplementation("org.codehaus.groovy:groovy-test:$groovyVersion")
+    testImplementation("org.spockframework:spock-core:$spockVersion") {
+      exclude group: "org.codehaus.groovy"
+    }
+
+    testRuntime "cglib:cglib:$cglibVersion"
+  }
+
+  configurations {
+    all*.exclude group: "org.slf4j", module: "slf4j-simple"
+    all*.exclude group: "org.codehaus.groovy", module: "groovy-all"
+  }
+
+  test {
+    jvmArgs '-Dfile.encoding=UTF8'
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardError'
+      minGranularity 2
+      maxGranularity 2
+    }
+  }
 }
+
+test.dependsOn('fenergy-db:setupTestData')
+test.mustRunAfter('fenergy-db:setupTestData')

@@ -1,6 +1,38 @@
-security:
-  ignored: /**
-
-management:
+spring:
+  output.ansi.enabled: always
   security:
-    enabled: false
+    oauth2:
+      resourceserver:
+        jwt:
+#          issuer-uri: http://firefire.au.auth0.com
+          jwk-set-uri: https://firefire.au.auth0.com/.well-known/jwks.json
+
+logging:
+  level:
+    co.firefire: DEBUG
+    org.springframework.security: DEBUG
+
+spring.devtools.restart.additional-paths: '/Development/firefire/fenergy/fenergy-webapp/out/production/classes'
+
+fenergy:
+  security:
+    oauth2:
+      resource:
+        user-info-uri: https://firefire.au.auth0.com/userinfo
+  db:
+    driver: org.postgresql.Driver
+    schema: fenergy
+    url: jdbc:postgresql://db.firefire.co/fenergytest
+    username: fenergytest
+    password: fenergytest_password
+
+#spring.security.oauth2.client.registration.auth0.client-id: vQqHVbouTr354tQIPJPImUwVtt2JZ4mh
+#spring.security.oauth2.client.registration.auth0.client-secret: gKLF5NIcWQa4PxFSF0zsLVzVDYSK539VlnVNPw7SP_0lvUW4iVAy3NeJT2_WmK_6
+#spring.security.oauth2.client.registration.auth0.authorization-grant-type: implicit
+#spring.security.oauth2.client.registration.auth0.redirect-uri: http://localhost:8080/index.html
+#spring.security.oauth2.client.provider.auth0.authorization-uri: https://firefire.au.auth0.com/authorize
+#spring.security.oauth2.client.provider.auth0.token-uri: https://firefire.au.auth0.com/oauth/token
+#spring.security.oauth2.client.provider.auth0.user-info-uri: https://firefire.au.auth0.com/userinfo
+#spring.security.oauth2.client.provider.auth0.user-info-authentication-method: header
+#spring.security.oauth2.client.provider.auth0.jwk-set-uri: https://firefire.au.auth0.com/.well-known/jwks.json
+#spring.security.oauth2.client.provider.auth0.user-name-attribute: name

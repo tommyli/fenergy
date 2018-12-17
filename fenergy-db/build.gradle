@@ -1,38 +1,8 @@
 import co.firefire.fenergy.db.RunSqlScriptTask
 
-buildscript {
-  ext {
-    flywayVersion = '5.0.3'
-  }
-  repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-}
-
-plugins {
-  id 'org.flywaydb.flyway' version '5.0.7'
-}
-apply plugin: 'java'
-apply plugin: 'groovy'
+apply plugin: 'org.flywaydb.flyway'
 
 description = "Fenergy DB"
-group "co.firefire.fenergy.db"
-
-ext {
-  flywayVersion = '5.0.7'
-  postgresDriverVersion = '42.2.2.jre7'
-}
-
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
-}
 
 dependencies {
   runtime("org.flywaydb:flyway-parent:$flywayVersion")

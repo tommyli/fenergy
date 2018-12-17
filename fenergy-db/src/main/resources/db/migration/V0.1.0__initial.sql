@@ -80,31 +80,24 @@ CREATE TABLE IF NOT EXISTS interval_value (
   CONSTRAINT interval_value_pk PRIMARY KEY (interval_day, interval)
 );
 
--- CREATE TABLE IF NOT EXISTS battery (
---   id              SERIAL        NOT NULL,
---   login_nmi       INT           NOT NULL REFERENCES login_nmi (id),
---   uom             VARCHAR(5)    NOT NULL,
---   interval_length INT           NOT NULL,
---   version         INT DEFAULT 0 NOT NULL,
---   CONSTRAINT battery_pk PRIMARY KEY (id),
---   CONSTRAINT battery_uk UNIQUE (login_nmi)
--- );
---
--- CREATE TABLE IF NOT EXISTS battery_interval_day (
---   id            SERIAL        NOT NULL,
---   battery       INT           NOT NULL REFERENCES battery (id),
---   interval_date DATE          NOT NULL,
---   version       INT DEFAULT 0 NOT NULL,
---   CONSTRAINT battery_interval_day_pk PRIMARY KEY (id),
---   CONSTRAINT battery_interval_day_uk UNIQUE (battery, interval_date) DEFERRABLE INITIALLY DEFERRED
--- );
---
--- CREATE TABLE IF NOT EXISTS battery_interval_value (
---   battery_interval_day INT            NOT NULL REFERENCES battery_interval_day (id),
---   interval             INT            NOT NULL,
---   charge               NUMERIC(10, 4) NOT NULL,
---   discharge            NUMERIC(10, 4) NOT NULL,
---   state_of_charge      NUMERIC(10, 4) NOT NULL,
---   version              INT DEFAULT 0  NOT NULL,
---   CONSTRAINT battery_interval_value_pk PRIMARY KEY (battery_interval_day, interval)
--- );
+CREATE TABLE IF NOT EXISTS battery (
+  id              SERIAL        NOT NULL,
+  login_nmi       INT           NOT NULL REFERENCES login_nmi (id),
+  uom             VARCHAR(5)    NOT NULL,
+  interval_length INT           NOT NULL,
+  version         INT DEFAULT 0 NOT NULL,
+  CONSTRAINT battery_pk PRIMARY KEY (id),
+  CONSTRAINT battery_uk UNIQUE (login_nmi)
+);
+ALTER SEQUENCE battery_id_seq RESTART WITH 1000;
+
+CREATE TABLE IF NOT EXISTS battery_day_value (
+  battery         INT            NOT NULL REFERENCES battery (id),
+  local_date      DATE           NOT NULL,
+  interval        INT            NOT NULL,
+  charge          NUMERIC(10, 4) NOT NULL,
+  discharge       NUMERIC(10, 4) NOT NULL,
+  state_of_charge NUMERIC(10, 4) NOT NULL,
+  version         INT DEFAULT 0  NOT NULL,
+  CONSTRAINT battery_day_value_pk PRIMARY KEY (battery, local_date, interval)
+);

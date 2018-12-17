@@ -1,12 +1,25 @@
 server:
-  context-path: /
   port: 8080
+  use-forward-headers: true
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  error:
+    include-exception: false
+    include-stacktrace: never
 
 logging:
-  file: fenergy.log
-  path: /tmp/log/fenergy
+  file: logs/fenergy.webapp.log
   level:
+    co.firefire: INFO
     org.springframework.security: INFO
+
+management:
+  endpoints:
+    web.exposure.include: '*'
+  endpoint:
+    health.show-details: 'when_authorized'
+  info.git.mode: full
 
 fenergy:
   db:
@@ -15,30 +28,36 @@ fenergy:
     url: jdbc:postgresql://localhost/fenergytest
     userid: fenergytest
     password: fenergytest_password
-  oauth:
-    client-id: fenergy-client-id
-    client-secret: fenergy-client-secret
-
-flyway:
-  driver: ${fenergy.db.driver}
-  schemas: ${fenergy.db.schema}
-  url: ${fenergy.db.url}
-  user: ${fenergy.db.userid}
-  password: ${fenergy.db.password}
-  placeholder: true
-  placeholders.schemaName: ${fenergy.db.schema}
-  placeholders.dbUserId: ${fenergy.db.userid}
+  security:
+    oauth2:
+      resource:
+        user-info-uri: https://authServerUrl/userinfo
 
 spring:
   application:
     name: fenergy
   jmx.enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+#          issuer-uri: http://authServerUrl
+          jwk-set-uri: https://authServerUrl/.well-known/jwks.json
+
   datasource:
-    type: org.apache.tomcat.jdbc.pool.DataSource
     driver: class-name=${fenergy.db.driver}
     url: ${fenergy.db.url}
     username: ${fenergy.db.userid}
     password: ${fenergy.db.password}
+  flyway:
+    schemas: ${fenergy.db.schema}
+    url: ${fenergy.db.url}
+    user: ${fenergy.db.userid}
+    password: ${fenergy.db.password}
+    placeholder-replacement: true
+    placeholders:
+      schemaName: ${fenergy.db.schema}
+      dbUserId: ${fenergy.db.userid}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     show-sql: true
@@ -46,7 +65,6 @@ spring:
     properties:
       hibernate:
         cache:
-          region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
           use_query_cache: true
           use_reference_entries: true
           use_second_level_cache: true
@@ -56,43 +74,13 @@ spring:
           batch_size: 500
           batch_versioned_data: true
           fetch_size: 200
+          lob:
+            non_contextual_creation: true
         order_inserts: true
         order_updates: true
-
-security:
-  oauth2:
-    client:
-      client-id: ${fenergy.oauth.client-id}
-      client-secret: ${fenergy.oauth.client-secret}
-      scope: read,write
-      auto-approve-scopes: '.*'
-      grant-types: authorization_code
-  basic:
-    enabled: false
-#  sessions: never
-
-google:
-  client:
-    clientId: ${fenergy.oauth.google.client.id}
-    clientSecret: ${fenergy.oauth.google.client.secret}
-    scope: ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"]
-    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
-    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
-  resource:
-    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
-
-github:
-  client:
-    clientId: ${fenergy.oauth.github.client.id}
-    clientSecret: ${fenergy.oauth.github.client.secret}
-    accessTokenUri: https://github.com/login/oauth/access_token
-    userAuthorizationUri: https://github.com/login/oauth/authorize
-  resource:
-    userInfoUri: https://api.github.com/user
-
-#zuul:
-#  routes:
-#    fenergy:
-#      path: /fenergy/**
-#      url: http://localhost:8080/fenergy
-#      stripPrefix: false
+        temp:
+          use_jdbc_metadata_defaults: false
+  profiles:
+    active: dev,authEnabled
+  devtools:
+    add-properties: false

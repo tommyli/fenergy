@@ -34,7 +34,7 @@ before_script:
 #  - npm i -g npm@5.3.0
 
 install:
-  - ./gradlew assemble -x fenergy-nem12:assemble fenergy-nem12:jar fenergy-nem12:testClasses
+  - ./gradlew assemble -x fenergy-service:assemble fenergy-service:jar fenergy-service:testClasses
 
 script:
   - ./gradlew clean fenergy-db:setupTestData check fenergy-webapp:build

@@ -2,11 +2,10 @@
 
 package co.firefire.fenergy.rest
 
-import co.firefire.fenergy.nem12.repository.LoginRepository
 import co.firefire.fenergy.nem12.service.Nem12Service
+import co.firefire.fenergy.shared.repository.LoginRepository
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.InputStreamResource
-import org.springframework.core.io.Resource
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -31,7 +30,7 @@ class UploadNem12Controller(
             val login = loginRepository.findByEmailOrUsername(loginDetails.getOrDefault("email", ""), loginDetails.getOrDefault("username", ""))
 
             if (login != null) {
-                val fileResource: Resource = InputStreamResource(file.inputStream)
+                val fileResource: InputStreamResource = InputStreamResource(file.inputStream)
                 nem12Service.uploadNem12(login, fileResource)
             }
         }

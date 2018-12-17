@@ -1,48 +1,32 @@
 description = "Fenergy UI client build script"
 
-buildscript {
-  repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
-  }
-}
-
 apply plugin: 'com.moowork.node'
 
 node {
-  version = '8.10.0'
-  yarnVersion = '1.3.2'
-  npmVersion = '5.6.0'
+  version = '8.14.0'
+  yarnVersion = '1.12.3'
+  npmVersion = '6.4.1'
   download = true
 }
 
-task bootRun(dependsOn: 'start') {
-  group = 'application'
-  description = 'Run the client app (for use with gradle bootRun -parallel'
-}
-
-task start(type: NpmTask, dependsOn: 'npmInstall') {
+task start(type: YarnTask, dependsOn: 'yarn_install') {
   group = 'application'
   description = 'Run the client app'
   args = ['run', 'start']
 }
 
-task buildClient(type: NpmTask, dependsOn: 'npmInstall') {
+task buildClient(type: YarnTask, dependsOn: 'yarn_install') {
   group = 'build'
   description = 'Build the client bundle'
   args = ['run', 'build']
 }
 
-task test(type: NpmTask, dependsOn: ['npmInstall']) {
+task testClient(type: YarnTask, dependsOn: ['yarn_install']) {
   environment = [CI: 'true']
   group = 'verification'
   description = 'Run the client tests'
   args = ['run', 'test']
 }
+
+assemble.dependsOn = ['buildClient']
+test.dependsOn = ['testClient']

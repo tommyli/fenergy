@@ -9,7 +9,12 @@ build/
 .project
 .settings
 .classpath
+.vscode
 *.log
 n12m-api/src/main/appengine/app.yaml
 out
-.vscode
+application-dev.*
+*.log.*
+
+fenergy-webapp/src/main/resources/public
+logs/*

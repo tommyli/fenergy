@@ -1,113 +1,102 @@
-buildscript {
-  repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
-    classpath("com.google.cloud.tools:appengine-gradle-plugin:+")
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"
-  }
-}
-
-plugins {
-  id 'org.springframework.boot' version '1.5.10.RELEASE'
-}
-apply plugin: 'groovy'
-apply plugin: 'java'
+//plugins {
+//  id 'org.jetbrains.kotlin.jvm' version '1.3.10'
+//}
+apply plugin: 'com.gorylenko.gradle-git-properties'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'kotlin'
-apply plugin: 'com.google.cloud.tools.appengine'
+apply plugin: 'kotlin-spring'
+apply plugin: 'org.springframework.boot'
+//apply plugin: 'com.google.cloud.tools.appengine'
 
 description = "Fenergy Web Application Server"
-group "co.firefire.fenergy.webapp"
 
-ext {
-  flywayVersion = '5.0.7'
-  postgresDriverVersion = '42.1.4.jre7'
+springBoot {
+  buildInfo()
 }
 
-repositories {
-  mavenLocal()
-  jcenter()
-  mavenCentral()
+bootJar {
+  launchScript()
 }
+
+//appengine {
+//  deploy {
+//    stopPreviousVersion = true
+//    promote = true
+//  }
+//}
 
 dependencies {
-  compile("org.springframework.boot:spring-boot-autoconfigure:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-mail:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion")
-  compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-//  compile("org.springframework.cloud:spring-cloud-starter-zuul:$springCloudZuulVersion")
-  compile("org.springframework.security.oauth:spring-security-oauth2:$springSecurityOAuth2Version")
+  implementation("org.hibernate:hibernate-ehcache")
+  implementation("org.springframework.boot:spring-boot-devtools:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-data-rest:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+  implementation("org.springframework.security:spring-security-core")
+  implementation("org.springframework.security:spring-security-config")
+  implementation("org.springframework.security:spring-security-oauth2-core")
+  implementation("org.springframework.security:spring-security-oauth2-jose")
+  implementation("org.springframework.security:spring-security-openid")
+  implementation("org.springframework.security:spring-security-web")
+  implementation("org.springframework.security:spring-security-oauth2-client")
+  implementation("org.springframework.security:spring-security-oauth2-resource-server")
+  implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$springBootVersion"
+  implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
   runtime project(":fenergy-db")
-  runtime "org.flywaydb:flyway-core:$flywayVersion"
-  compile project(":fenergy-nem12")
+  runtime("org.flywaydb:flyway-core:$flywayVersion")
+  implementation project(":fenergy-service")
 
-  testCompile("org.springframework.boot:spring-boot-test:$springBootVersion")
-  testCompile("org.springframework:spring-test:$springTestVersion")
-  testCompile("org.spockframework:spock-core:$spockVersion") {
+  testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+  testImplementation("org.springframework.boot:spring-boot-test-autoconfigure:$springBootVersion")
+  testImplementation("org.spockframework:spock-spring:$spockVersion") {
     exclude module: 'groovy-all'
   }
-  testCompile("org.spockframework:spock-spring:$spockVersion") {
-    exclude module: 'groovy-all'
+  testRuntime "com.h2database:h2:$h2Version"
+}
+
+task copyClientResources(dependsOn: ':fenergy-ui:assemble') {
+  group = 'build'
+  description = 'Copy client resources into server webapp build'
+  doLast {
+    copy {
+      from "${project(':fenergy-ui').projectDir}/build"
+      into "${project(':fenergy-webapp').projectDir}/src/main/resources/public"
+    }
   }
 }
+
+assemble.mustRunAfter 'copyClientResources'
+
+task assembleWebappAndClient(dependsOn: ['copyClientResources', 'assemble']) {
+  group = 'build'
+  description = 'Build combined client bundles and server webapp'
+
+  doLast {
+    copy {
+      from fileTree(dir: "${project(':fenergy-webapp').buildDir}/libs/")
+      into "$rootDir/build/"
+    }
+
+    logger.quiet "JAR generated at $rootDir/build/. It combines the server and client projects."
+  }
+}
+
+build.dependsOn 'assembleWebappAndClient'
+test.dependsOn ':fenergy-ui:test'
 
 def sysProps = [
-  'logging.file'       : project.property('fenergy.logging.file'),
-  'logging.path'       : project.property('fenergy.logging.path'),
-  'fenergy.db.driver'  : project.property('fenergy.db.driver'),
-  'fenergy.db.schema'  : project.property('fenergy.db.schema'),
-  'fenergy.db.url'     : project.property('fenergy.db.url'),
-  'fenergy.db.userid'  : project.property('fenergy.db.userid'),
-  'fenergy.db.password': project.property('fenergy.db.password')
+  'spring.profiles.active': project.property('fenergy.spring.profiles.active'),
 ]
-
-bootRun {
-  jvmArgs = ['-Dspring.output.ansi.enabled=always']
-  systemProperties = sysProps
-}
 
 [bootRun, test].each { task ->
   configure(task) {
     systemProperties = sysProps
   }
 }
-
-appengine {
-  deploy {
-    stopPreviousVersion = true
-    promote = true
-  }
+repositories {
+  mavenCentral()
 }
-
-test {
-  testLogging {
-    events 'passed', 'skipped', 'failed', 'standardError'
-    minGranularity 2
-    maxGranularity 2
-  }
-}
-
-task copyClientResources(dependsOn: ':fenergy-ui:buildClient') {
-  group = 'build'
-  description = 'Copy client resources into server webapp build'
-  doLast {
-    copy {
-      from "${project(':fenergy-ui').buildDir}"
-      into "${project(':fenergy-webapp').buildDir}/resources/main/public"
-    }
-  }
-}
-
-assemble.dependsOn copyClientResources
-check.dependsOn ':fenergy-ui:test'

@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from 'material-ui/IconButton';
-import Avatar from 'material-ui/Avatar';
-import faGoogle from '@fortawesome/fontawesome-free-brands/faGoogle'
-import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
+import faGoogle from '@fortawesome/fontawesome-free'
+import faSignOutAlt from '@fortawesome/fontawesome-free'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
-const SignIn = ({ authenticated = false, user, actions }) => {
+const SignIn = ({authenticated = false, user, actions}) => {
 
-  const googleSignIn = () => { window.location.href = "/auth/signin/google" }
+  const googleSignIn = () => {
+    window.location.href = "/auth/signin/google"
+  }
 
   return (
     <span>{
@@ -16,17 +18,17 @@ const SignIn = ({ authenticated = false, user, actions }) => {
         (
           <span>
             <IconButton color="inherit">
-              <Avatar alt={user.name} src={user.picture} />
+              <Avatar alt={user.name} src={user.picture}/>
             </IconButton>
             <IconButton color="inherit">
-              <FontAwesomeIcon icon={faSignOutAlt} onClick={actions.signOut} />
+              <FontAwesomeIcon icon={faSignOutAlt} onClick={actions.signOut}/>
             </IconButton>
           </span>
         ) :
         (
           <span>
             <IconButton color="inherit">
-              <FontAwesomeIcon icon={faGoogle} onClick={googleSignIn} />
+              <FontAwesomeIcon icon={faGoogle} onClick={googleSignIn}/>
             </IconButton>
           </span>
         )
