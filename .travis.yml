@@ -3,7 +3,7 @@
 language: java
 
 node_js:
-  - "6"
+  - "8"
   
 jdk:
   - oraclejdk8
@@ -15,7 +15,7 @@ services:
   - postgresql
 
 addons:
-  postgresql: "9.4"
+  postgresql: "9.6"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -31,7 +31,7 @@ before_script:
   - psql -f fenergy-db/src/main/resources/db/setup_db.sql -U postgres
 
 #before_install:
-#  - npm i -g npm@5.3.0
+#  - npm i -g npm@6.4.1
 
 install:
   - ./gradlew assemble -x fenergy-service:assemble fenergy-service:jar fenergy-service:testClasses
