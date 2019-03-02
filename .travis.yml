@@ -2,6 +2,7 @@
 
 env:
   - SPRING_PROFILES_ACTIVE="travis"
+  - FENERGY_SPRING_PROFILES_ACTIVE="travis"
 
 language: java
 
