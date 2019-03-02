@@ -69,21 +69,8 @@ task copyClientResources(dependsOn: ':fenergy-ui:assemble') {
 }
 
 assemble.mustRunAfter 'copyClientResources'
-
-task assembleWebappAndClient(dependsOn: ['copyClientResources', 'assemble']) {
-  group = 'build'
-  description = 'Build combined client bundles and server webapp'
-
-  doLast {
-    copy {
-      from fileTree(dir: "${project(':fenergy-webapp').buildDir}/libs/")
-      into "$rootDir/build/"
-    }
-
-    logger.quiet "JAR generated at $rootDir/build/. It combines the server and client projects."
-  }
-}
-
+bootJar.dependsOn('copyClientResources')
+bootJar.mustRunAfter('copyClientResources')
 
 def sysProps = [
   'spring.profiles.active': project.property('fenergy.spring.profiles.active'),
@@ -95,7 +82,6 @@ def sysProps = [
   }
 }
 
-build.dependsOn 'assembleWebappAndClient'
 test.dependsOn ':fenergy-ui:test'
 test.dependsOn(':fenergy-db:flywayClean')
 test.mustRunAfter(':fenergy-db:flywayClean')
