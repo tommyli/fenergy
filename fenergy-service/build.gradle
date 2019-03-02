@@ -54,7 +54,7 @@ compileTestKotlin {
 }
 
 def sysProps = [
-  "spring.profiles.active" : parent.property("fenergy.spring.profiles.active")
+  "spring.profiles.active" : project.property("fenergy.spring.profiles.active")
 ]
 
 [test].each { task ->
