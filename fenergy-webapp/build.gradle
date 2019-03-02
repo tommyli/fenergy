@@ -1,11 +1,16 @@
-//plugins {
-//  id 'org.jetbrains.kotlin.jvm' version '1.3.10'
-//}
-apply plugin: 'com.gorylenko.gradle-git-properties'
+plugins {
+  id 'org.springframework.boot'
+}
 apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+  imports {
+    mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+  }
+}
+
+apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-apply plugin: 'org.springframework.boot'
 //apply plugin: 'com.google.cloud.tools.appengine'
 
 description = "Fenergy Web Application Server"
@@ -26,15 +31,12 @@ bootJar {
 //}
 
 dependencies {
-  implementation("org.hibernate:hibernate-ehcache")
-  implementation("org.springframework.boot:spring-boot-devtools:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-data-rest:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-devtools")
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("org.springframework.boot:spring-boot-starter-data-rest")
+  implementation("org.springframework.boot:spring-boot-starter-logging")
+  implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.security:spring-security-core")
   implementation("org.springframework.security:spring-security-config")
   implementation("org.springframework.security:spring-security-oauth2-core")
@@ -46,16 +48,13 @@ dependencies {
   implementation "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$springBootVersion"
   implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
-  runtime project(":fenergy-db")
-  runtime("org.flywaydb:flyway-core:$flywayVersion")
   implementation project(":fenergy-service")
 
-  testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-  testImplementation("org.springframework.boot:spring-boot-test-autoconfigure:$springBootVersion")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
   testImplementation("org.spockframework:spock-spring:$spockVersion") {
     exclude module: 'groovy-all'
   }
-  testRuntime "com.h2database:h2:$h2Version"
 }
 
 task copyClientResources(dependsOn: ':fenergy-ui:assemble') {
@@ -85,8 +84,6 @@ task assembleWebappAndClient(dependsOn: ['copyClientResources', 'assemble']) {
   }
 }
 
-build.dependsOn 'assembleWebappAndClient'
-test.dependsOn ':fenergy-ui:test'
 
 def sysProps = [
   'spring.profiles.active': project.property('fenergy.spring.profiles.active'),
@@ -97,6 +94,8 @@ def sysProps = [
     systemProperties = sysProps
   }
 }
-repositories {
-  mavenCentral()
-}
+
+build.dependsOn 'assembleWebappAndClient'
+test.dependsOn ':fenergy-ui:test'
+test.dependsOn(':fenergy-db:flywayClean')
+test.mustRunAfter(':fenergy-db:flywayClean')

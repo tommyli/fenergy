@@ -1,25 +1,40 @@
 // Tommy Li (tommy.li@firefire.co), 2017-01-16
 
-//apply plugin: 'io.spring.dependency-management'
+plugins {
+  id 'org.springframework.boot' apply false
+}
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+  imports {
+    mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+  }
+}
+
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-//apply plugin: 'org.springframework.boot'
 
 description = "Fenergy service module"
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+  implementation("org.springframework.boot:spring-boot-starter-cache")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:+")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:+")
-  implementation("org.jetbrains.kotlin:kotlin-reflect:+")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+  implementation("javax.cache:cache-api")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.21")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.21")
+  implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.21")
+  implementation("com.hazelcast:hazelcast")
+  implementation("com.hazelcast:hazelcast-hibernate53:$hazelcastHibernate53Version")
+  implementation("com.hazelcast:hazelcast-spring")
 
-  runtime("org.postgresql:postgresql:$postgresDriverVersion")
-  runtime("com.zaxxer:HikariCP:$hikariVersion")
+  runtimeOnly project(":fenergy-db")
+  runtimeOnly("org.postgresql:postgresql:$postgresDriverVersion")
+  runtimeOnly("org.flywaydb:flyway-core")
+  runtimeOnly("com.zaxxer:HikariCP")
 
-  testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-  testImplementation("org.springframework.boot:spring-boot-test-autoconfigure:$springBootVersion")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
   testImplementation("org.spockframework:spock-spring:$spockVersion") {
     exclude module: 'groovy-all'
   }
@@ -37,3 +52,16 @@ compileTestKotlin {
     jvmTarget = "1.8"
   }
 }
+
+def sysProps = [
+  "spring.profiles.active" : parent.property("fenergy.spring.profiles.active")
+]
+
+[test].each { task ->
+  configure(task) {
+    systemProperties = sysProps
+  }
+}
+
+test.dependsOn(':fenergy-db:flywayClean')
+test.mustRunAfter(':fenergy-db:flywayClean')

@@ -2,6 +2,7 @@
 
 package co.firefire.fenergy.nem12.repository
 
+import co.firefire.fenergy.nem12.DataJpaTest
 import co.firefire.fenergy.nem12.domain.IntervalDay
 import co.firefire.fenergy.nem12.domain.IntervalQuality
 import co.firefire.fenergy.nem12.domain.NmiMeterRegister
@@ -11,14 +12,11 @@ import co.firefire.fenergy.shared.domain.LoginNmi
 import co.firefire.fenergy.shared.repository.LoginNmiRepository
 import co.firefire.fenergy.shared.repository.LoginRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
 import static co.firefire.fenergy.nem12.TestUtils.dt
 
-@Transactional
-@SpringBootTest
+@DataJpaTest
 class LoginNmiRepositoryIntegrationSpec extends Specification {
 
   @Autowired

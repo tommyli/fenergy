@@ -2,9 +2,8 @@
 
 package co.firefire.fenergy.rest
 
-import org.slf4j.LoggerFactory
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 //import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -17,7 +16,7 @@ class LoginController {
 
         fun parsePrincipal(principal: Principal?): Map<String, String> {
             val result = mapOf("name" to (principal?.name ?: ""))
-            val p = principal as OAuth2AuthenticationToken
+//            val p = principal as OAuth2AuthenticationToken
             assert(true)
 //            return if (principal is OAuth2AuthenticationToken) {
 //                val details = principal.principal.details

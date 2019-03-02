@@ -2,15 +2,13 @@
 
 package co.firefire.fenergy.nem12.repository
 
+import co.firefire.fenergy.nem12.DataJpaTest
 import co.firefire.fenergy.shared.domain.Login
 import co.firefire.fenergy.shared.repository.LoginRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
-@Transactional
-@SpringBootTest
+@DataJpaTest
 class LoginRepositoryIntegrationSpec extends Specification {
 
   @Autowired

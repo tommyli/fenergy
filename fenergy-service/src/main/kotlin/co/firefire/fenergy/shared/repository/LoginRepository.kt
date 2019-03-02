@@ -4,9 +4,7 @@ package co.firefire.fenergy.shared.repository
 
 import co.firefire.fenergy.shared.domain.Login
 import org.springframework.data.repository.PagingAndSortingRepository
-import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 interface LoginRepository : PagingAndSortingRepository<Login, Long> {
 
     fun findByUsername(username: String): Login?

@@ -4,6 +4,7 @@ package co.firefire.fenergy.nem12.repository
 
 import java.time.LocalDateTime
 
+import co.firefire.fenergy.nem12.DataJpaTest
 import co.firefire.fenergy.nem12.domain.IntervalDay
 import co.firefire.fenergy.nem12.domain.IntervalQuality
 import co.firefire.fenergy.nem12.domain.IntervalValue
@@ -14,15 +15,12 @@ import co.firefire.fenergy.shared.domain.LoginNmi
 import co.firefire.fenergy.shared.domain.UnitOfMeasure
 import co.firefire.fenergy.shared.repository.LoginNmiRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
 import static co.firefire.fenergy.nem12.TestUtils.dt
 import static co.firefire.fenergy.nem12.TestUtils.dts
 
-@Transactional
-@SpringBootTest
+@DataJpaTest
 class NmiMeterRegisterRepositoryIntegrationSpec extends Specification {
 
   @Autowired

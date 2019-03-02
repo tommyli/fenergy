@@ -1,38 +1,44 @@
-import co.firefire.fenergy.db.RunSqlScriptTask
+buildscript {
+  ext {
+    postgresDriverVersion = '42.2.5'
+  }
+  dependencies {
+    classpath "org.postgresql:postgresql:$postgresDriverVersion"
+  }
+}
+
+plugins {
+  id 'org.springframework.boot' apply false
+}
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+  imports {
+    mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+  }
+}
 
 apply plugin: 'org.flywaydb.flyway'
 
 description = "Fenergy DB"
 
 dependencies {
-  runtime("org.flywaydb:flyway-parent:$flywayVersion")
-  runtime("org.postgresql:postgresql:$postgresDriverVersion")
+  runtimeOnly("org.flywaydb:flyway-core")
 }
 
 flyway {
-  driver = project.property('fenergy.db.driver')
-  schemas = [project.property('fenergy.db.schema')]
-  url = project.property('fenergy.test.db.url')
-  user = project.property('fenergy.test.db.userid')
-  password = project.property('fenergy.test.db.password')
+  driver = project.property('fenergy.db.ddl.driver')
+  schemas = [project.property('fenergy.db.ddl.schema')]
+  url = project.property('fenergy.db.ddl.url')
+  user = project.property('fenergy.db.ddl.userid')
+  password = project.property('fenergy.db.ddl.password')
   locations = ["classpath:db/migration"]
   placeholderReplacement = true
   placeholders = [
-    'schemaName': project.property('fenergy.db.schema'),
-    'dbUserId'  : project.property('fenergy.test.db.userid')
-  ]
-}
-
-task setupTestData(type: RunSqlScriptTask) {
-  url = project.property('fenergy.test.db.url')
-  userid = project.property('fenergy.test.db.userid')
-  password = project.property('fenergy.test.db.password')
-  scripts = [
-    'insert_test_data.sql'
+    'schemaName': project.property('fenergy.db.ddl.schema'),
+    'dbUserId'  : project.property('fenergy.db.ddl.userid')
   ]
 }
 
 flywayClean.dependsOn classes
 flywayMigrate.dependsOn classes
 flywayMigrate.dependsOn flywayClean
-setupTestData.dependsOn flywayMigrate

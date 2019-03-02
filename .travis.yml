@@ -33,8 +33,8 @@ before_script:
 #before_install:
 #  - npm i -g npm@6.4.1
 
-install:
-  - ./gradlew assemble -x fenergy-service:assemble fenergy-service:jar fenergy-service:testClasses
+#install:
+#  - ./gradlew assemble -x fenergy-service:assemble fenergy-service:jar fenergy-service:testClasses
 
 script:
   - ./gradlew clean build

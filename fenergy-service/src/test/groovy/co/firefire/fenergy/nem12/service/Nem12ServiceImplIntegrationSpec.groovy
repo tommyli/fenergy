@@ -2,6 +2,7 @@
 
 package co.firefire.fenergy.nem12.service
 
+import co.firefire.fenergy.nem12.DataJpaTest
 import co.firefire.fenergy.nem12.domain.NmiMeterRegister
 import co.firefire.fenergy.nem12.repository.NmiMeterRegisterRepository
 import co.firefire.fenergy.shared.domain.Login
@@ -9,14 +10,11 @@ import co.firefire.fenergy.shared.domain.LoginNmi
 import co.firefire.fenergy.shared.repository.LoginNmiRepository
 import co.firefire.fenergy.shared.repository.LoginRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
-import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
-@Transactional
-@SpringBootTest
+@DataJpaTest
 class Nem12ServiceImplIntegrationSpec extends Specification {
 
   @Autowired
@@ -40,7 +38,6 @@ class Nem12ServiceImplIntegrationSpec extends Specification {
     underTest.uploadNem12(login, nem12FileResource)
 
     then:
-    noExceptionThrown()
     LoginNmi loginNmi = loginNmiRepo.findByLoginAndNmi(login, '6408091979')
     Iterable<NmiMeterRegister> nmrs1 = nmrRepo.findAllByLoginNmi(loginNmi)
     nmrs1.size() == 2
@@ -50,7 +47,6 @@ class Nem12ServiceImplIntegrationSpec extends Specification {
     underTest.uploadNem12(login, nem12FileResource)
 
     then:
-    noExceptionThrown()
     Iterable<NmiMeterRegister> nmrs2 = nmrRepo.findAllByLoginNmi(loginNmi)
     nmrs2.size() == 2
     nmrs2.every { it.intervalDays.values().every { it.intervalValues.size() == 48 } }

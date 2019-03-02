@@ -19,6 +19,7 @@ interface Nem12Service {
 @Service
 class Nem12ServiceImpl(val loginNmiRepo: LoginNmiRepository) : Nem12Service {
 
+    @Transactional
     override fun uploadNem12(login: Login, nem12Resource: Resource) {
         val nmiMeterRegisters = Nem12ParserImpl(login).parseNem12Resource(nem12Resource)
         nmiMeterRegisters.forEach { nmr ->
