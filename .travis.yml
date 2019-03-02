@@ -1,5 +1,8 @@
 # Tommy Li (tommy.li@firefire.co), 2017-06-17
 
+env:
+  - SPRING_PROFILES_ACTIVE="travis"
+
 language: java
 
 node_js:
