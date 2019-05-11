@@ -2,7 +2,6 @@
 
 buildscript {
   ext {
-    gradleNodePluginVersion = '1.2.0'
     springBootVersion = '2.1.2.RELEASE'
     flywayVersion = '5.2.4'
   }
@@ -16,7 +15,6 @@ buildscript {
   }
   dependencies {
     classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-    classpath "com.moowork.gradle:gradle-node-plugin:$gradleNodePluginVersion"
     classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:+"
     classpath "gradle.plugin.com.boxfuse.client:gradle-plugin-publishing:$flywayVersion"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:+"

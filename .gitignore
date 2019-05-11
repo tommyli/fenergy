@@ -15,6 +15,6 @@ n12m-api/src/main/appengine/app.yaml
 out
 application-dev.*
 *.log.*
-
+*.log*.gz
 fenergy-webapp/src/main/resources/public
 logs/*
